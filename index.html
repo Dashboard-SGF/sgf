@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGF - Protótipo Inicial (Módulo 01)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 15px;
+            width: 100%;
+            max-width: 900px; 
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            margin-bottom: 4px;
+        }
+
+        p {
+            font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+            opacity: 0.9;
+        }
+
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card-label {
+            font-size: 0.75rem;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .card-value {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            font-weight: bold;
+            margin-top: 6px;
+        }
+
+        .btn-dummy {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #2563eb;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            cursor: pointer;
+        }
+
+        h3 {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            margin-bottom: 12px;
+            color: #1e3a8a;
+        }
+
+        
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto; 
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            min-width: 320px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SGF - Gestão e Fiscalização</h1>
+        <p>Módulo 01: Custos Globais e Curva ABC</p>
+    </header>
+
+    
+    <div class="cards-container">
+        <div class="card">
+            <div class="card-label">Orçamento Total</div>
+            <div class="card-value">R$ 500.000,00</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Gasto Realizado</div>
+            <div class="card-value" style="color: #dc2626;">R$ 320.000,00</div>
+        </div>
+        <div class="card">
+            <div class="card-label">Saldo Restante</div>
+            <div class="card-value" style="color: #16a34a;">R$ 180.000,00</div>
+        </div>
+    </div>
+
+    <button class="btn-dummy">+ Novo Gasto</button>
+
+    <h3>Curva ABC de Insumos</h3>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Classe</th>
+                    <th>Valor (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Concreto Usinado 30MPa</td>
+                    <td>Classe A</td>
+                    <td>150.000,00</td>
+                </tr>
+                <tr>
+                    <td>Aço CA-50 10mm</td>
+                    <td>Classe A</td>
+                    <td>110.000,00</td>
+                </tr>
+                <tr>
+                    <td>Locação de Guindaste</td>
+                    <td>Classe B</td>
+                    <td>45.000,00</td>
+                </tr>
+                <tr>
+                    <td>Madeira para Fôrmas</td>
+                    <td>Classe C</td>
+                    <td>15.000,00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
