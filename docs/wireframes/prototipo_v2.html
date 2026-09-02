@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGF · Suprimentos &amp; Financeiro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #EEF0EE;
+            --bg-panel: #FFFFFF;
+            --ink: #1B1F23;
+            --ink-soft: #5B6570;
+            --line: #D6DAD6;
+            --line-strong: #B7BDB8;
+            --steel: #46525C;
+            --amber: #DB9A2F;
+            --amber-deep: #B87E1F;
+            --green: #3C7955;
+            --red: #C4432E;
+            --red-bg: #FBEAE6;
+            --blueprint: #1E4E6B;
+            --radius: 3px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            background:
+                linear-gradient(var(--bg) 0 0),
+                repeating-linear-gradient(0deg, rgba(30, 78, 107, 0.035) 0 1px, transparent 1px 40px),
+                repeating-linear-gradient(90deg, rgba(30, 78, 107, 0.035) 0 1px, transparent 1px 40px);
+            background-color: var(--bg);
+            color: var(--ink);
+            font-family: 'IBM Plex Sans', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.45;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .mono {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        /* ---------- shell ---------- */
+        .shell {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 16px 64px;
+        }
+
+        /* ---------- topbar ---------- */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 16px;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--line-strong);
+            margin-bottom: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            border: 1.5px solid var(--ink);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            background: repeating-linear-gradient(135deg, var(--ink) 0 2px, transparent 2px 6px);
+            color: #fff;
+        }
+
+        .brand-mark span {
+            background: var(--ink);
+            padding: 2px 3px;
+        }
+
+        .brand-text h1 {
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .brand-text p {
+            margin: 1px 0 0;
+            font-size: 12px;
+            color: var(--ink-soft);
+        }
+
+        .top-controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: var(--bg-panel);
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius);
+            padding: 9px 30px 9px 12px;
+            font-size: 13px;
+            color: var(--ink);
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%2346525C'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 11px center;
+            cursor: pointer;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: var(--radius);
+            border: 1px solid transparent;
+            padding: 9px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .15s ease, transform .1s ease;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background: var(--amber);
+            color: #20160a;
+        }
+
+        .btn-primary:hover {
+            background: var(--amber-deep);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border-color: var(--line-strong);
+            color: var(--ink);
+        }
+
+        .btn-ghost:hover {
+            background: #fff;
+        }
+
+        /* ---------- section heading ---------- */
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin: 34px 0 12px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .section-head h2 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .section-head .tag {
+            font-size: 11.5px;
+            color: var(--ink-soft);
+        }
+
+        .req-id {
+            font-size: 10.5px;
+            color: var(--ink-soft);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            padding: 2px 6px;
+        }
+
+        /* ---------- KPI grid ---------- */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .kpi-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius);
+            padding: 18px 18px 16px;
+            position: relative;
+        }
+
+        .kpi-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent, var(--steel));
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .kpi-card.hero {
+            --accent: var(--amber);
+        }
+
+        .kpi-card.gasto {
+            --accent: var(--blueprint);
+        }
+
+        .kpi-card.status {
+            --accent: var(--steel);
+        }
+
+        .kpi-label {
+            font-size: 12.5px;
+            color: var(--ink-soft);
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .kpi-value.alert {
+            color: var(--red);
+        }
+
+        .kpi-sub {
+            font-size: 12px;
+            color: var(--ink-soft);
+            margin-top: 8px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .status-item {
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            padding: 8px 10px;
+        }
+
+        .status-item .n {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .status-item .l {
+            font-size: 11px;
+            color: var(--ink-soft);
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .dot.pendente {
+            background: #C79A2E;
+        }
+
+        .dot.aprovado {
+            background: var(--blueprint);
+        }
+
+        .dot.entregue {
+            background: var(--green);
+        }
+
+        .dot.divergencia {
+            background: var(--red);
+        }
+
+        @media (min-width: 720px) {
+            .kpi-grid {
+                grid-template-columns: 1.2fr 1fr 1.4fr;
+            }
+        }
+
+        /* ---------- panel (chart / occurrences) ---------- */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius);
+            padding: 18px;
+        }
+
+        .panel-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 900px) {
+            .panel-row {
+                grid-template-columns: 1.5fr 1fr;
+            }
+        }
+
+        .abc-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            font-size: 11.5px;
+            color: var(--ink-soft);
+        }
+
+        .abc-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .abc-legend i {
+            width: 10px;
+            height: 10px;
+            display: inline-block;
+            border-radius: 1px;
+        }
+
+        .occ-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .occ-item {
+            border-left: 3px solid var(--red);
+            background: var(--red-bg);
+            border-radius: 0 2px 2px 0;
+            padding: 10px 12px;
+        }
+
+        .occ-item .t {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .occ-item .d {
+            font-size: 12px;
+            color: var(--ink-soft);
+            margin-top: 2px;
+        }
+
+        .occ-item .meta {
+            font-size: 11px;
+            color: var(--steel);
+            margin-top: 6px;
+        }
+
+        .occ-empty {
+            font-size: 13px;
+            color: var(--ink-soft);
+            padding: 8px 2px;
+        }
+
+        /* ---------- table ---------- */
+        .table-wrap {
+            background: var(--bg-panel);
+            border: 1px solid var(--line-strong);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead th {
+            text-align: left;
+            font-weight: 600;
+            color: var(--ink-soft);
+            font-size: 11.5px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line-strong);
+        }
+
+        tbody td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #FAFAF8;
+        }
+
+        .code {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12.5px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 500;
+            padding: 4px 9px;
+            border-radius: 2px;
+            border: 1px solid transparent;
+        }
+
+        .badge.pendente {
+            background: #FBF2DE;
+            color: #8A6512;
+            border-color: #EBD8A4;
+        }
+
+        .badge.aprovado {
+            background: #E7F0F5;
+            color: var(--blueprint);
+            border-color: #C6DAE4;
+        }
+
+        .badge.entregue {
+            background: #E7F1EA;
+            color: var(--green);
+            border-color: #C7DECC;
+        }
+
+        .badge.divergencia {
+            background: var(--red-bg);
+            color: var(--red);
+            border-color: #EEC9C1;
+        }
+
+        /* mobile card fallback for table */
+        .table-cards {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-cards .row-card {
+            padding: 14px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .table-cards .row-card:last-child {
+            border-bottom: none;
+        }
+
+        .row-card .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .row-card .val {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+
+        .row-card .meta {
+            font-size: 12px;
+            color: var(--ink-soft);
+            margin-top: 4px;
+        }
+
+        @media (min-width: 760px) {
+            .table-cards {
+                display: none;
+            }
+
+            .table-wrap table {
+                display: table;
+            }
+        }
+
+        @media (max-width: 759px) {
+            .table-wrap table {
+                display: none;
+            }
+        }
+
+        /* ---------- upload modal ---------- */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 24, 20, 0.55);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        @media (min-width:720px) {
+            .modal-backdrop {
+                align-items: center;
+            }
+        }
+
+        .modal {
+            background: #fff;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 6px 6px 0 0;
+            padding: 22px;
+            max-height: 88vh;
+            overflow: auto;
+        }
+
+        @media (min-width:720px) {
+            .modal {
+                border-radius: 6px;
+            }
+        }
+
+        .modal h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .modal p.hint {
+            font-size: 12.5px;
+            color: var(--ink-soft);
+            margin: 4px 0 16px;
+        }
+
+        .drop {
+            border: 1.5px dashed var(--line-strong);
+            border-radius: var(--radius);
+            padding: 26px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color .15s ease, background .15s ease;
+        }
+
+        .drop:hover,
+        .drop.drag {
+            border-color: var(--amber);
+            background: #FFF9EF;
+        }
+
+        .drop .ic {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .drop .main {
+            font-size: 13.5px;
+            font-weight: 600;
+        }
+
+        .drop .sub {
+            font-size: 12px;
+            color: var(--ink-soft);
+            margin-top: 4px;
+        }
+
+        input[type=file] {
+            display: none;
+        }
+
+        .modal-status {
+            margin-top: 14px;
+            font-size: 13px;
+            display: none;
+            padding: 10px 12px;
+            border-radius: 2px;
+        }
+
+        .modal-status.show {
+            display: block;
+        }
+
+        .modal-status.ok {
+            background: #E7F1EA;
+            color: var(--green);
+        }
+
+        .modal-status.err {
+            background: var(--red-bg);
+            color: var(--red);
+        }
+
+        .modal-status.loading {
+            background: #F0F1EE;
+            color: var(--ink-soft);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .cols-req {
+            margin-top: 10px;
+            font-size: 11.5px;
+            color: var(--ink-soft);
+        }
+
+        .cols-req .code {
+            background: #F1F0EC;
+            padding: 1px 5px;
+            border-radius: 2px;
+        }
+
+        footer.foot {
+            margin-top: 44px;
+            font-size: 11.5px;
+            color: var(--ink-soft);
+            border-top: 1px solid var(--line);
+            padding-top: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="shell">
+
+        <div class="topbar">
+            <div class="brand">
+                <div class="brand-mark">S</div>
+                <div class="brand-text">
+                    <h1>SGF · Suprimentos &amp; Financeiro</h1>
+                    <p id="obraLabel">Consolidado · todas as obras</p>
+                </div>
+            </div>
+            <div class="top-controls">
+                <select id="selObra" aria-label="Canteiro de obra">
+                    <option value="todas">Todas as obras</option>
+                    <option value="res-jardins">Residencial Jardins</option>
+                    <option value="via-norte">Via Expressa Norte</option>
+                    <option value="hosp-sul">Hospital Regional Sul</option>
+                </select>
+                <select id="selPeriodo" aria-label="Período">
+                    <option value="mes">Mês atual</option>
+                    <option value="trimestre">Trimestre</option>
+                    <option value="ano">Ano</option>
+                </select>
+                <button class="btn btn-primary" id="openUpload">Importar planilha</button>
+            </div>
+        </div>
+
+        <!-- RF-01 -->
+        <div class="section-head">
+            <h2>Indicadores do período</h2>
+            <span class="req-id">RF-01</span>
+        </div>
+        <div class="kpi-grid">
+            <div class="kpi-card gasto">
+                <div class="kpi-label">Total gasto no período</div>
+                <div class="kpi-value" id="kpiGasto">R$ 0,00</div>
+                <div class="kpi-sub" id="kpiGastoSub">— </div>
+            </div>
+            <div class="kpi-card hero">
+                <div class="kpi-label">Saldo orçamentário remanescente</div>
+                <div class="kpi-value" id="kpiSaldo">R$ 0,00</div>
+                <div class="kpi-sub" id="kpiSaldoSub">Orçamento total: R$ 0,00</div>
+            </div>
+            <div class="kpi-card status">
+                <div class="kpi-label">Pedidos por status</div>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="n" id="cntPendente">0</div>
+                        <div class="l"><span class="dot pendente"></span>Pendente</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="n" id="cntAprovado">0</div>
+                        <div class="l"><span class="dot aprovado"></span>Aprovado</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="n" id="cntEntregue">0</div>
+                        <div class="l"><span class="dot entregue"></span>Entregue</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="n" id="cntDivergencia">0</div>
+                        <div class="l"><span class="dot divergencia"></span>Divergência</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RF-02 + RF-05 -->
+        <div class="section-head">
+            <h2>Curva ABC &amp; ocorrências</h2>
+            <span class="req-id">RF-02 · RF-05</span>
+        </div>
+        <div class="panel-row">
+            <div class="panel">
+                <h3 style="font-size:13.5px; font-weight:600; margin-bottom:2px;">Impacto financeiro por insumo</h3>
+                <p style="font-size:11.5px; color:var(--ink-soft); margin:0 0 8px;">Ordenado por custo total acumulado
+                </p>
+                <svg id="abcChart" viewBox="0 0 520 240" style="width:100%; height:auto; display:block;"></svg>
+                <div class="abc-legend">
+                    <span><i style="background:var(--amber)"></i>Classe A (~80% do valor)</span>
+                    <span><i style="background:var(--steel)"></i>Classe B / C</span>
+                    <span><i style="background:var(--blueprint)"></i>Curva acumulada</span>
+                </div>
+            </div>
+            <div class="panel">
+                <h3 style="font-size:13.5px; font-weight:600; margin-bottom:10px;">Central de ocorrências</h3>
+                <ul class="occ-list" id="occList"></ul>
+            </div>
+        </div>
+
+        <!-- RF-03 -->
+        <div class="section-head">
+            <h2>Pedidos recentes</h2>
+            <span class="req-id">RF-03</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Fornecedor</th>
+                        <th>Emissão</th>
+                        <th>Valor total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody"></tbody>
+            </table>
+            <div class="table-cards" id="ordersCards"></div>
+        </div>
+
+        <footer class="foot">Protótipo de interface · SGF Módulo 01 (Suprimentos e Financeiro) · dados de demonstração,
+            sem conexão com o backend Laravel / Maatwebsite.</footer>
+    </div>
+
+    <!-- RF-06 modal -->
+    <div class="modal-backdrop" id="uploadModal">
+        <div class="modal">
+            <h3>Importar planilha de insumos</h3>
+            <p class="hint">Upload de arquivo .xlsx/.xls — processado via Maatwebsite (Laravel-Excel) para atualizar
+                KPIs, Curva ABC e pedidos.</p>
+
+            <label class="drop" id="dropZone">
+                <input type="file" id="fileInput" accept=".xlsx,.xls">
+                <div class="ic">⬆</div>
+                <div class="main">Arraste a planilha aqui ou toque para selecionar</div>
+                <div class="sub">Suporta .xlsx e .xls · até 5.000 linhas</div>
+            </label>
+
+            <div class="cols-req">
+                Cabeçalho esperado: <span class="code">codigo_pedido</span>, <span class="code">fornecedor</span>, <span
+                    class="code">item</span>, <span class="code">valor_unitario</span>, <span
+                    class="code">quantidade</span>, <span class="code">status</span>
+            </div>
+
+            <div class="modal-status" id="modalStatus"></div>
+
+            <div class="modal-actions">
+                <button class="btn btn-ghost" id="closeUpload">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+
+            const fmtBRL = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            const obraNames = {
+                todas: 'Consolidado · todas as obras',
+                'res-jardins': 'Residencial Jardins',
+                'via-norte': 'Via Expressa Norte',
+                'hosp-sul': 'Hospital Regional Sul'
+            };
+
+            // --- base datasets per obra/período (demo) ---
+            function baseDataset(obra, periodo) {
+                const seedMap = { todas: 1, 'res-jardins': 2, 'via-norte': 3, 'hosp-sul': 4 };
+                const periodMult = { mes: 1, trimestre: 2.7, ano: 9.4 };
+                const seed = seedMap[obra] * periodMult[periodo];
+
+                const orcamentoTotal = 480000 * seed;
+                const totalGasto = orcamentoTotal * (0.55 + (seed % 3) * 0.08);
+
+                const insumos = [
+                    { nome: 'Concreto usinado', valor: 96000 },
+                    { nome: 'Aço CA-50', valor: 71500 },
+                    { nome: 'Blocos cerâmicos', valor: 38200 },
+                    { nome: 'Argamassa', valor: 19800 },
+                    { nome: 'Impermeabilizante', valor: 14600 },
+                    { nome: 'Elétrica / fiação', valor: 9700 },
+                    { nome: 'Tubulação PVC', valor: 6200 },
+                    { nome: 'EPI / consumíveis', valor: 3100 }
+                ].map(i => ({ ...i, valor: i.valor * (seed % 2 === 0 ? 1.15 : 0.9) }));
+
+                const fornecedores = ['Construmix Materiais', 'Ferro &amp; Aço São Paulo', 'Cerâmica Bandeirantes', 'Impertec Soluções', 'ElétricaPrime', 'Hidrocom Distribuidora'];
+                const statusList = ['pendente', 'aprovado', 'entregue', 'divergencia'];
+                const pedidos = Array.from({ length: 8 }).map((_, i) => {
+                    const st = statusList[(i + seed) % statusList.length];
+                    return {
+                        codigo: 'PC-' + (1000 + i * 7 + Math.round(seed * 3)),
+                        fornecedor: fornecedores[(i + seed) % fornecedores.length].replace('&amp;', '&'),
+                        data: new Date(2026, 7, 28 - i * 3).toLocaleDateString('pt-BR'),
+                        valor: (4200 + i * 1875) * (seed % 2 === 0 ? 1.1 : 0.85),
+                        status: st
+                    };
+                });
+
+                const ocorrencias = seed % 3 === 0 ? [] : [
+                    { titulo: 'Entrega parcial — Aço CA-50', desc: 'Recebidas 6t de 10t previstas no pedido PC-1042.', meta: fornecedores[0] + ' · há 2 dias' },
+                    { titulo: 'Avaria em transporte — Blocos cerâmicos', desc: '12% da carga com trincas registradas no recebimento.', meta: fornecedores[2] + ' · há 4 dias' }
+                ].slice(0, seed % 4 === 0 ? 1 : 2);
+
+                return { orcamentoTotal, totalGasto, insumos, pedidos, ocorrencias };
+            }
+
+            let current = baseDataset('todas', 'mes');
+
+            // --- render KPIs ---
+            function renderKPIs() {
+                const saldo = current.orcamentoTotal - current.totalGasto;
+                const estourado = saldo < 0; // RN-03
+
+                document.getElementById('kpiGasto').textContent = fmtBRL(current.totalGasto);
+                document.getElementById('kpiGastoSub').textContent = 'sobre orçamento de ' + fmtBRL(current.orcamentoTotal);
+
+                const saldoEl = document.getElementById('kpiSaldo');
+                saldoEl.textContent = fmtBRL(saldo);
+                saldoEl.classList.toggle('alert', estourado); // RN-03 destaque vermelho
+                document.getElementById('kpiSaldoSub').textContent = estourado
+                    ? 'Orçamento excedido — verificar pedidos aprovados'
+                    : 'Orçamento total: ' + fmtBRL(current.orcamentoTotal);
+
+                const counts = { pendente: 0, aprovado: 0, entregue: 0, divergencia: 0 };
+                current.pedidos.forEach(p => counts[p.status]++);
+                document.getElementById('cntPendente').textContent = counts.pendente;
+                document.getElementById('cntAprovado').textContent = counts.aprovado;
+                document.getElementById('cntEntregue').textContent = counts.entregue;
+                document.getElementById('cntDivergencia').textContent = counts.divergencia;
+            }
+
+            // --- render ABC chart (RF-02 / RN-01) ---
+            function renderABC() {
+                const svg = document.getElementById('abcChart');
+                const items = [...current.insumos].sort((a, b) => b.valor - a.valor);
+                const total = items.reduce((s, i) => s + i.valor, 0);
+                let acc = 0;
+                const withAcc = items.map(i => { acc += i.valor; return { ...i, pct: acc / total }; });
+
+                const W = 520, H = 240, padL = 34, padB = 26, padT = 10, padR = 10;
+                const chartW = W - padL - padR, chartH = H - padT - padB;
+                const barGap = 8;
+                const barW = (chartW - barGap * (items.length - 1)) / items.length;
+                const maxVal = Math.max(...items.map(i => i.valor));
+
+                let bars = '';
+                let line = '';
+                withAcc.forEach((it, idx) => {
+                    const x = padL + idx * (barW + barGap);
+                    const h = (it.valor / maxVal) * chartH;
+                    const y = padT + (chartH - h);
+                    const isA = it.pct <= 0.8;
+                    bars += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}" fill="${isA ? 'var(--amber)' : 'var(--steel)'}" rx="1.5"/>`;
+                    const lx = x + barW / 2;
+                    const ly = padT + (chartH - it.pct * chartH);
+                    line += (idx === 0 ? 'M' : 'L') + lx.toFixed(1) + ' ' + ly.toFixed(1) + ' ';
+                });
+
+                // baseline
+                let axis = `<line x1="${padL}" y1="${padT + chartH}" x2="${padL + chartW}" y2="${padT + chartH}" stroke="var(--line-strong)" stroke-width="1"/>`;
+                axis += `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + chartH}" stroke="var(--line-strong)" stroke-width="1"/>`;
+
+                const dots = withAcc.map((it, idx) => {
+                    const x = padL + idx * (barW + barGap) + barW / 2;
+                    const y = padT + (chartH - it.pct * chartH);
+                    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6" fill="var(--blueprint)"/>`;
+                }).join('');
+
+                svg.innerHTML = axis + bars + `<path d="${line}" fill="none" stroke="var(--blueprint)" stroke-width="1.6"/>` + dots;
+            }
+
+            // --- render occurrences (RF-05) ---
+            function renderOcc() {
+                const list = document.getElementById('occList');
+                if (current.ocorrencias.length === 0) {
+                    list.innerHTML = '<div class="occ-empty">Sem ocorrências ou divergências no período.</div>';
+                    return;
+                }
+                list.innerHTML = current.ocorrencias.map(o => `
+      <li class="occ-item">
+        <div class="t">${o.titulo}</div>
+        <div class="d">${o.desc}</div>
+        <div class="meta">${o.meta}</div>
+      </li>
+    `).join('');
+            }
+
+            // --- render orders table (RF-03) ---
+            const statusLabel = { pendente: 'Pendente', aprovado: 'Aprovado', entregue: 'Entregue', divergencia: 'Divergência' };
+
+            function renderOrders() {
+                const tbody = document.getElementById('ordersTableBody');
+                tbody.innerHTML = current.pedidos.map(p => `
+      <tr>
+        <td class="code">${p.codigo}</td>
+        <td>${p.fornecedor}</td>
+        <td>${p.data}</td>
+        <td>${fmtBRL(p.valor)}</td>
+        <td><span class="badge ${p.status}">${statusLabel[p.status]}</span></td>
+      </tr>
+    `).join('');
+
+                const cards = document.getElementById('ordersCards');
+                cards.innerHTML = current.pedidos.map(p => `
+      <div class="row-card">
+        <div class="top">
+          <span class="code">${p.codigo}</span>
+          <span class="badge ${p.status}">${statusLabel[p.status]}</span>
+        </div>
+        <div class="val">${fmtBRL(p.valor)}</div>
+        <div class="meta">${p.fornecedor} · ${p.data}</div>
+      </div>
+    `).join('');
+            }
+
+            function renderAll() {
+                renderKPIs();
+                renderABC();
+                renderOcc();
+                renderOrders();
+            }
+
+            renderAll();
+
+            // --- filters (RF-04) ---
+            const selObra = document.getElementById('selObra');
+            const selPeriodo = document.getElementById('selPeriodo');
+            function applyFilters() {
+                current = baseDataset(selObra.value, selPeriodo.value);
+                document.getElementById('obraLabel').textContent = obraNames[selObra.value] +
+                    (selPeriodo.value === 'mes' ? ' · mês atual' : selPeriodo.value === 'trimestre' ? ' · trimestre' : ' · ano');
+                renderAll();
+            }
+            selObra.addEventListener('change', applyFilters);
+            selPeriodo.addEventListener('change', applyFilters);
+
+            // --- upload modal (RF-06) ---
+            const modal = document.getElementById('uploadModal');
+            const openUpload = document.getElementById('openUpload');
+            const closeUpload = document.getElementById('closeUpload');
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const modalStatus = document.getElementById('modalStatus');
+
+            openUpload.addEventListener('click', () => { modal.classList.add('open'); resetModalStatus(); });
+            closeUpload.addEventListener('click', () => modal.classList.remove('open'));
+            modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('open'); });
+
+            function resetModalStatus() {
+                modalStatus.className = 'modal-status';
+                modalStatus.textContent = '';
+            }
+
+            ['dragover', 'dragenter'].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('drag'); }));
+            ['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('drag'); }));
+            dropZone.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
+            fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+            function handleFile(file) {
+                if (!file) return;
+                modalStatus.className = 'modal-status show loading';
+                modalStatus.textContent = 'Processando planilha via Maatwebsite (Laravel-Excel)…';
+
+                const valid = /\.(xlsx|xls)$/i.test(file.name);
+
+                // simula tempo de parse (RNF-02: alvo < 3s)
+                setTimeout(() => {
+                    if (!valid) {
+                        modalStatus.className = 'modal-status show err';
+                        modalStatus.textContent = 'Planilha incompatível: cabeçalho não reconhecido. A visualização atual foi mantida.'; // RN-02
+                        return;
+                    }
+                    // simula novo conjunto de dados vindo da planilha importada
+                    const overBudget = Math.random() < 0.35;
+                    const seedShift = Math.random();
+                    current = baseDataset(selObra.value, selPeriodo.value);
+                    if (overBudget) {
+                        current.totalGasto = current.orcamentoTotal * (1.02 + seedShift * 0.1);
+                    }
+                    renderAll();
+                    modalStatus.className = 'modal-status show ok';
+                    modalStatus.textContent = 'Planilha importada com sucesso. KPIs, Curva ABC e pedidos atualizados.';
+                }, 1100);
+            }
+
+        })();
+    </script>
+</body>
+
+</html>
