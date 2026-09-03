@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SGF — Dashboard de Suprimentos e Gestão Financeira de Obras">
+    <title>SGF — Suprimentos & Gestão Financeira</title>
+    <link rel="stylesheet" href="./css/dashboard.css">
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true"></div>
+                <div>
+                    <strong>SGF</strong>
+                    <small>Gestão & Fiscalização</small>
+                </div>
+            </div>
+
+            <nav class="nav" aria-label="Navegação principal">
+                <a class="active" href="#overview"><span class="nav-dot"></span>Visão financeira</a>
+                <a href="#abc"><span class="nav-dot"></span>Curva ABC</a>
+                <a href="#orders"><span class="nav-dot"></span>Pedidos</a>
+                <a href="#occurrences"><span class="nav-dot"></span>Ocorrências</a>
+            </nav>
+
+            <div class="sidebar-note">
+                <strong>Unidade 1 · MVP</strong>
+                <span>Dados simulados e fluxos prioritários. Sem persistência física.</span>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="mobile-brand">
+                    <div class="brand-mark" aria-hidden="true"></div>
+                    <strong>SGF</strong>
+                </div>
+
+                <div class="top-actions">
+                    <button class="btn" type="button" data-action="print">
+                        <span aria-hidden="true">⇩</span>
+                        <span class="button-label">Exportar</span>
+                    </button>
+                    <button class="btn primary" type="button" data-action="open-import">
+                        <span aria-hidden="true">＋</span>
+                        <span class="button-label">Importar Excel</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="container" id="overview">
+                <section class="hero">
+                    <div>
+                        <div class="eyebrow">Módulo 01 · Suprimentos & Financeiro</div>
+                        <h1>Visão financeira das obras</h1>
+                        <p>Acompanhe orçamento, custos, pedidos e materiais de maior impacto em um único painel.</p>
+
+                        <div class="meta-line">
+                            <span>Atualizado pela aplicação Laravel</span>
+                            <span class="dot-sep"></span>
+                            <span>Visão consolidada</span>
+                        </div>
+                    </div>
+
+                    <div class="mode-badge">Dados simulados · Unidade 1</div>
+                </section>
+
+                <section class="filters" aria-label="Filtros do dashboard">
+                    <div class="field">
+                        <label for="workFilter">Obra</label>
+                        <select class="control" id="workFilter">
+                            <option value="">Todas as obras</option>
+                            <option value="Residencial Vista Alegre">Residencial Vista Alegre</option>
+                            <option value="Torre Atlântico">Torre Atlântico</option>
+                            <option value="Parque das Flores">Parque das Flores</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="startDate">Período inicial</label>
+                        <input class="control" id="startDate" type="date" value="2026-08-01">
+                    </div>
+
+                    <div class="field">
+                        <label for="endDate">Período final</label>
+                        <input class="control" id="endDate" type="date" value="2026-09-03">
+                    </div>
+
+                    <div class="field search-field">
+                        <label for="searchInput">Buscar pedido ou insumo</label>
+                        <input class="control" id="searchInput" type="search" placeholder="Código, fornecedor, item..." autocomplete="off">
+                    </div>
+
+                    <button class="btn primary filter-button" id="applyFilters" type="button">Filtrar</button>
+                </section>
+
+                <section class="kpis" aria-label="Indicadores financeiros">
+                    <article class="card kpi">
+                        <div class="kpi-top">
+                            <div>
+                                <div class="kpi-label">Orçamento aprovado</div>
+                                <div class="kpi-value">R$ 1.235.000,00</div>
+                                <div class="kpi-sub">Base de comparação do MVP</div>
+                            </div>
+                            <div class="mini-icon" aria-hidden="true">◎</div>
+                        </div>
+                    </article>
+
+                    <article class="card kpi">
+                        <div class="kpi-top">
+                            <div>
+                                <div class="kpi-label">Total gasto</div>
+                                <div class="kpi-value">R$ 842.650,00</div>
+                                <div class="kpi-sub">68.2% do orçamento aprovado</div>
+                            </div>
+                            <div class="mini-icon" aria-hidden="true">↗</div>
+                        </div>
+                        <div class="progress" aria-label="Percentual executado do orçamento">
+                            <i style="width: 68.2%"></i>
+                        </div>
+                    </article>
+
+                    <article class="card kpi ">
+                        <div class="kpi-top">
+                            <div>
+                                <div class="kpi-label">Saldo remanescente</div>
+                                <div class="kpi-value">R$ 392.350,00</div>
+                                <div class="kpi-sub">Disponível para novas despesas</div>
+                            </div>
+                            <div class="mini-icon" aria-hidden="true">◒</div>
+                        </div>
+                    </article>
+
+                    <article class="card kpi">
+                        <div class="kpi-label">Pedidos que exigem atenção</div>
+                        <div class="status-grid">
+                            <div class="status-chip">Pendentes<strong>18</strong></div>
+                            <div class="status-chip danger-status">Divergências<strong>7</strong></div>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="section-grid">
+                    <article class="card section-card">
+                        <div class="section-head">
+                            <div>
+                                <h2>Execução do orçamento</h2>
+                                <p>Comparativo entre valor realizado e saldo disponível.</p>
+                            </div>
+                            <span class="pill">Orçado × realizado</span>
+                        </div>
+
+                        <div class="budget-summary">
+                            <div class="donut" style="--executed: 68.2%;">
+                                <div class="donut-center">
+                                    <strong>68.2%</strong>
+                                    <span>executado</span>
+                                </div>
+                            </div>
+
+                            <div class="budget-values">
+                                <div><span>Gasto</span><strong>R$ 842.650,00</strong></div>
+                                <div><span>Saldo</span><strong>R$ 392.350,00</strong></div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card section-card" id="abc">
+                        <div class="section-head">
+                            <div>
+                                <h2>Curva ABC de custos</h2>
+                                <p>Insumos ordenados pelo impacto financeiro acumulado.</p>
+                            </div>
+                            <span class="pill">A 80% · B 15% · C 5%</span>
+                        </div>
+
+                        <div class="abc-list">
+                                                        <div class="abc-item">
+                                <div class="abc-main">
+                                    <div class="abc-label">
+                                        <strong>Cimento</strong>
+                                        <span>R$ 280.000,00</span>
+                                    </div>
+                                    <div class="abc-bar">
+                                        <i class="abc-fill class-a" style="width: 100%"></i>
+                                    </div>
+                                </div>
+
+                                <div class="class-badge class-A">
+                                    A
+                                </div>
+                            </div>
+                                                        <div class="abc-item">
+                                <div class="abc-main">
+                                    <div class="abc-label">
+                                        <strong>Aço</strong>
+                                        <span>R$ 240.000,00</span>
+                                    </div>
+                                    <div class="abc-bar">
+                                        <i class="abc-fill class-a" style="width: 86%"></i>
+                                    </div>
+                                </div>
+
+                                <div class="class-badge class-A">
+                                    A
+                                </div>
+                            </div>
+                                                        <div class="abc-item">
+                                <div class="abc-main">
+                                    <div class="abc-label">
+                                        <strong>Blocos</strong>
+                                        <span>R$ 180.000,00</span>
+                                    </div>
+                                    <div class="abc-bar">
+                                        <i class="abc-fill class-b" style="width: 64%"></i>
+                                    </div>
+                                </div>
+
+                                <div class="class-badge class-B">
+                                    B
+                                </div>
+                            </div>
+                                                        <div class="abc-item">
+                                <div class="abc-main">
+                                    <div class="abc-label">
+                                        <strong>Areia</strong>
+                                        <span>R$ 60.000,00</span>
+                                    </div>
+                                    <div class="abc-bar">
+                                        <i class="abc-fill class-b" style="width: 21%"></i>
+                                    </div>
+                                </div>
+
+                                <div class="class-badge class-B">
+                                    B
+                                </div>
+                            </div>
+                                                        <div class="abc-item">
+                                <div class="abc-main">
+                                    <div class="abc-label">
+                                        <strong>Tubos</strong>
+                                        <span>R$ 35.000,00</span>
+                                    </div>
+                                    <div class="abc-bar">
+                                        <i class="abc-fill class-b" style="width: 13%"></i>
+                                    </div>
+                                </div>
+
+                                <div class="class-badge class-B">
+                                    B
+                                </div>
+                            </div>
+                                                        <div class="abc-item">
+                                <div class="abc-main">
+                                    <div class="abc-label">
+                                        <strong>Cabos</strong>
+                                        <span>R$ 25.000,00</span>
+                                    </div>
+                                    <div class="abc-bar">
+                                        <i class="abc-fill class-c" style="width: 9%"></i>
+                                    </div>
+                                </div>
+
+                                <div class="class-badge class-C">
+                                    C
+                                </div>
+                            </div>
+                                                        <div class="abc-item">
+                                <div class="abc-main">
+                                    <div class="abc-label">
+                                        <strong>Tinta</strong>
+                                        <span>R$ 12.000,00</span>
+                                    </div>
+                                    <div class="abc-bar">
+                                        <i class="abc-fill class-c" style="width: 4%"></i>
+                                    </div>
+                                </div>
+
+                                <div class="class-badge class-C">
+                                    C
+                                </div>
+                            </div>
+                                                        <div class="abc-item">
+                                <div class="abc-main">
+                                    <div class="abc-label">
+                                        <strong>Louças</strong>
+                                        <span>R$ 8.000,00</span>
+                                    </div>
+                                    <div class="abc-bar">
+                                        <i class="abc-fill class-c" style="width: 3%"></i>
+                                    </div>
+                                </div>
+
+                                <div class="class-badge class-C">
+                                    C
+                                </div>
+                            </div>
+                                                        <div class="abc-item">
+                                <div class="abc-main">
+                                    <div class="abc-label">
+                                        <strong>Outros</strong>
+                                        <span>R$ 2.650,00</span>
+                                    </div>
+                                    <div class="abc-bar">
+                                        <i class="abc-fill class-c" style="width: 1%"></i>
+                                    </div>
+                                </div>
+
+                                <div class="class-badge class-C">
+                                    C
+                                </div>
+                            </div>
+                                                    </div>
+
+                        <div class="legend">
+                            <span><b>A</b> · alto impacto</span>
+                            <span><b>B</b> · médio impacto</span>
+                            <span><b>C</b> · baixo impacto</span>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="card table-card" id="orders">
+                    <div class="table-head">
+                        <div>
+                            <h2>Pedidos recentes</h2>
+                            <p>Pedidos mais recentes dentro do período selecionado.</p>
+                        </div>
+                        <span class="pill" id="visibleOrdersCount">4 pedidos</span>
+                    </div>
+
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Fornecedor</th>
+                                    <th>Data</th>
+                                    <th>Item</th>
+                                    <th>Quantidade</th>
+                                    <th>Valor total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTable">
+                                                                <tr
+                                    data-order-row
+                                    data-search="pd-2026-0148 construmax ltda. aço ca-50 10mm"
+                                    data-date="02/09/2026"
+                                    data-work="">
+                                    <td><strong>PD-2026-0148</strong></td>
+                                    <td>Construmax Ltda.</td>
+                                    <td>02/09/2026</td>
+                                    <td>Aço CA-50 10mm</td>
+                                    <td>2.500 kg</td>
+                                    <td><strong>R$ 21.750,00</strong></td>
+                                    <td><span class="status approved">Aprovado</span></td>
+                                </tr>
+                                                                <tr
+                                    data-order-row
+                                    data-search="pd-2026-0147 materiais bahia cimento cp-ii"
+                                    data-date="01/09/2026"
+                                    data-work="">
+                                    <td><strong>PD-2026-0147</strong></td>
+                                    <td>Materiais Bahia</td>
+                                    <td>01/09/2026</td>
+                                    <td>Cimento CP-II</td>
+                                    <td>800 sc</td>
+                                    <td><strong>R$ 28.800,00</strong></td>
+                                    <td><span class="status pending">Pendente</span></td>
+                                </tr>
+                                                                <tr
+                                    data-order-row
+                                    data-search="pd-2026-0146 hidroforte tubos pvc 100mm"
+                                    data-date="31/08/2026"
+                                    data-work="">
+                                    <td><strong>PD-2026-0146</strong></td>
+                                    <td>Hidroforte</td>
+                                    <td>31/08/2026</td>
+                                    <td>Tubos PVC 100mm</td>
+                                    <td>350 un</td>
+                                    <td><strong>R$ 14.700,00</strong></td>
+                                    <td><span class="status delivered">Entregue</span></td>
+                                </tr>
+                                                                <tr
+                                    data-order-row
+                                    data-search="pd-2026-0145 elétrica prime cabo flexível 10mm"
+                                    data-date="30/08/2026"
+                                    data-work="">
+                                    <td><strong>PD-2026-0145</strong></td>
+                                    <td>Elétrica Prime</td>
+                                    <td>30/08/2026</td>
+                                    <td>Cabo flexível 10mm</td>
+                                    <td>1.200 m</td>
+                                    <td><strong>R$ 19.440,00</strong></td>
+                                    <td><span class="status divergence">Divergência</span></td>
+                                </tr>
+                                                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="order-mobile" id="ordersMobile">
+                                                <article
+                            class="order-card"
+                            data-order-card
+                            data-search="pd-2026-0148 construmax ltda. aço ca-50 10mm"
+                            data-date="02/09/2026"
+                            data-work="">
+                            <div class="order-top">
+                                <strong>PD-2026-0148</strong>
+                                <span class="status approved">Aprovado</span>
+                            </div>
+                            <div class="order-muted">Construmax Ltda. · Aço CA-50 10mm</div>
+                            <div class="order-bottom">
+                                <span>02/09/2026</span>
+                                <strong>R$ 21.750,00</strong>
+                            </div>
+                        </article>
+                                                <article
+                            class="order-card"
+                            data-order-card
+                            data-search="pd-2026-0147 materiais bahia cimento cp-ii"
+                            data-date="01/09/2026"
+                            data-work="">
+                            <div class="order-top">
+                                <strong>PD-2026-0147</strong>
+                                <span class="status pending">Pendente</span>
+                            </div>
+                            <div class="order-muted">Materiais Bahia · Cimento CP-II</div>
+                            <div class="order-bottom">
+                                <span>01/09/2026</span>
+                                <strong>R$ 28.800,00</strong>
+                            </div>
+                        </article>
+                                                <article
+                            class="order-card"
+                            data-order-card
+                            data-search="pd-2026-0146 hidroforte tubos pvc 100mm"
+                            data-date="31/08/2026"
+                            data-work="">
+                            <div class="order-top">
+                                <strong>PD-2026-0146</strong>
+                                <span class="status delivered">Entregue</span>
+                            </div>
+                            <div class="order-muted">Hidroforte · Tubos PVC 100mm</div>
+                            <div class="order-bottom">
+                                <span>31/08/2026</span>
+                                <strong>R$ 14.700,00</strong>
+                            </div>
+                        </article>
+                                                <article
+                            class="order-card"
+                            data-order-card
+                            data-search="pd-2026-0145 elétrica prime cabo flexível 10mm"
+                            data-date="30/08/2026"
+                            data-work="">
+                            <div class="order-top">
+                                <strong>PD-2026-0145</strong>
+                                <span class="status divergence">Divergência</span>
+                            </div>
+                            <div class="order-muted">Elétrica Prime · Cabo flexível 10mm</div>
+                            <div class="order-bottom">
+                                <span>30/08/2026</span>
+                                <strong>R$ 19.440,00</strong>
+                            </div>
+                        </article>
+                                            </div>
+
+                    <div class="empty-state" id="ordersEmpty" hidden>Nenhum pedido encontrado com os filtros atuais.</div>
+                </section>
+
+                <section class="card section-card occurrences-section" id="occurrences">
+                    <div class="section-head">
+                        <div>
+                            <h2>Ocorrências e divergências</h2>
+                            <p>Entregas parciais, avarias e inconsistências que exigem atenção.</p>
+                        </div>
+                        <span class="pill danger-pill">3 abertas</span>
+                    </div>
+
+                    <div class="occ-list">
+                                                <article class="occ">
+                            <div class="occ-icon" aria-hidden="true">!</div>
+                            <div>
+                                <strong>PD-2026-0145</strong>
+                                <p>Cabo flexível entregue com especificação diferente da solicitada.</p>
+                                <span class="occ-tag">⚠ Especificação incorreta</span>
+                            </div>
+                        </article>
+                                                <article class="occ">
+                            <div class="occ-icon" aria-hidden="true">!</div>
+                            <div>
+                                <strong>PD-2026-0139</strong>
+                                <p>Recebimento parcial: 120 de 200 unidades previstas.</p>
+                                <span class="occ-tag">⚠ Entrega parcial</span>
+                            </div>
+                        </article>
+                                                <article class="occ">
+                            <div class="occ-icon" aria-hidden="true">!</div>
+                            <div>
+                                <strong>PD-2026-0134</strong>
+                                <p>Material recebido apresenta avarias em parte da carga.</p>
+                                <span class="occ-tag">⚠ Avaria</span>
+                            </div>
+                        </article>
+                                            </div>
+                </section>
+            </div>
+        </main>
+
+        <nav class="mobile-nav" aria-label="Navegação mobile">
+            <a href="#overview" class="active"><span>⌂</span>Resumo</a>
+            <a href="#abc"><span>▥</span>ABC</a>
+            <a href="#orders"><span>≡</span>Pedidos</a>
+            <a href="#occurrences"><span>!</span>Ocorrências</a>
+        </nav>
+    </div>
+
+    <div class="modal" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+        <div class="modal-card">
+            <div class="modal-head">
+                <div>
+                    <h2 id="importTitle">Importar planilha de custos</h2>
+                    <p>O upload funciona apenas na implantação dinâmica do Laravel.</p>
+                </div>
+                <button class="btn icon ghost" type="button" data-action="close-import" aria-label="Fechar">×</button>
+            </div>
+
+            <form id="importForm" class="modal-body" action="/importar" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_token" value="ZSnh3J4oThoQLEM6Gq97FnLV5WXZsVqGd28pVt2a" autocomplete="off">
+                <div class="dropzone">
+                    <strong>Selecione a planilha legada</strong>
+                    <p>Arquivos .xlsx ou .xls. O backend deve validar o cabeçalho antes de processar os dados.</p>
+                    <input id="excelFile" name="arquivo" type="file" accept=".xlsx,.xls" required>
+                </div>
+
+                <div class="static-warning" id="staticWarning" hidden>
+                    No GitHub Pages o sistema usa somente a massa de dados pré-carregada.
+                    A importação real exige a versão Laravel publicada em servidor PHP.
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn" type="button" data-action="close-import">Cancelar</button>
+                    <button class="btn primary" id="submitImport" type="submit">Validar e processar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./js/dashboard.js"></script>
+</body>
+
+</html>
