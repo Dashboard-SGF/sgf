@@ -1,0 +1,40 @@
+name: Deploy Plano B (GitHub Pages)
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, gd, zip
+
+      - name: Instalar Dependências do Composer
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Preparar Arquivo de Ambiente (.env)
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Executar Exportação Estática (Spatie)
+        run: php artisan export
+
+      - name: Publicar Artefatos no GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
