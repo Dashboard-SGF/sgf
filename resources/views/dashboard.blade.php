@@ -26,11 +26,6 @@
                 <a href="#orders"><span class="nav-dot"></span>Pedidos</a>
                 <a href="#occurrences"><span class="nav-dot"></span>Ocorrências</a>
             </nav>
-
-            <div class="sidebar-note">
-                <strong>Unidade 1 · MVP</strong>
-                <span>Dados simulados e fluxos prioritários. Sem persistência física.</span>
-            </div>
         </aside>
 
         <main class="main">
@@ -58,12 +53,6 @@
                         <div class="eyebrow">Módulo 01 · Suprimentos & Financeiro</div>
                         <h1>Visão financeira das obras</h1>
                         <p>Acompanhe orçamento, custos, pedidos e materiais de maior impacto em um único painel.</p>
-
-                        <div class="meta-line">
-                            <span>Atualizado pela aplicação Laravel</span>
-                            <span class="dot-sep"></span>
-                            <span>Visão consolidada</span>
-                        </div>
                     </div>
 
                     <div class="mode-badge">Dados simulados · Unidade 1</div>
