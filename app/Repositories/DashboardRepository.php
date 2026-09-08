@@ -7,7 +7,7 @@ class DashboardRepository
     public function getDadosDashboard(): array
     {
         return [
-            'orcamento_total' => 2.00,
+            'orcamento_total' => 1235000.00,
             'total_gasto' => 842650.00,
             'pedidos_pendentes' => 18,
             'com_divergencia' => 7,
