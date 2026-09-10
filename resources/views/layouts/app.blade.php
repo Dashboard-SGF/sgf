@@ -7,6 +7,7 @@
     <meta name="description" content="SGF — Dashboard de Suprimentos e Gestão Financeira de Obras">
     <title>@yield('title', 'SGF — Suprimentos & Gestão Financeira')</title>
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 
 <body>
@@ -22,18 +23,23 @@
 
             <nav class="nav" aria-label="Navegação principal">
                 <a href="{{ route('obras.index') }}" style="color: #4bb1a3; font-weight: 800; border: 1px solid rgba(75,177,163,0.3); margin-bottom: 8px;">
+                <a href="{{ route('obras.index', [], false) }}" style="color: #4bb1a3; font-weight: 800; border: 1px solid rgba(75,177,163,0.3); margin-bottom: 8px;">
                     <span aria-hidden="true">←</span> Voltar ao Hub
                 </a>
                 <a class="{{ ($active_tab ?? '') === 'overview' ? 'active' : '' }}" href="{{ route('dashboard', $obra_ativa ?? '44444B') }}">
+                <a class="{{ ($active_tab ?? '') === 'overview' ? 'active' : '' }}" href="{{ route('dashboard', $obra_ativa ?? '44444B', false) }}">
                     <span class="nav-dot"></span>Visão Financeira
                 </a>
                 <a class="{{ ($active_tab ?? '') === 'curva-abc' ? 'active' : '' }}" href="{{ route('dashboard.curva-abc', $obra_ativa ?? '44444B') }}">
+                <a class="{{ ($active_tab ?? '') === 'curva-abc' ? 'active' : '' }}" href="{{ route('dashboard.curva-abc', $obra_ativa ?? '44444B', false) }}">
                     <span class="nav-dot"></span>Curva ABC
                 </a>
                 <a class="{{ ($active_tab ?? '') === 'servicos' ? 'active' : '' }}" href="{{ route('dashboard.servicos', $obra_ativa ?? '44444B') }}">
+                <a class="{{ ($active_tab ?? '') === 'servicos' ? 'active' : '' }}" href="{{ route('dashboard.servicos', $obra_ativa ?? '44444B', false) }}">
                     <span class="nav-dot"></span>Serviços & Composição
                 </a>
                 <a class="{{ ($active_tab ?? '') === 'ocorrencias' ? 'active' : '' }}" href="{{ route('dashboard.ocorrencias', $obra_ativa ?? '44444B') }}">
+                <a class="{{ ($active_tab ?? '') === 'ocorrencias' ? 'active' : '' }}" href="{{ route('dashboard.ocorrencias', $obra_ativa ?? '44444B', false) }}">
                     <span class="nav-dot"></span>Ocorrências
                 </a>
             </nav>
@@ -43,6 +49,7 @@
             <header class="topbar">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <a href="{{ route('obras.index') }}" class="btn ghost" style="font-weight: 700;">
+                    <a href="{{ route('obras.index', [], false) }}" class="btn ghost" style="font-weight: 700;">
                         <span aria-hidden="true">←</span>
                         <span class="button-label">Voltar ao Hub</span>
                     </a>
@@ -88,6 +95,10 @@
             <a href="{{ route('dashboard.curva-abc', $obra_ativa ?? '44444B') }}" class="{{ ($active_tab ?? '') === 'curva-abc' ? 'active' : '' }}"><span>▥</span>ABC</a>
             <a href="{{ route('dashboard.servicos', $obra_ativa ?? '44444B') }}" class="{{ ($active_tab ?? '') === 'servicos' ? 'active' : '' }}"><span>≡</span>Serviços</a>
             <a href="{{ route('dashboard.ocorrencias', $obra_ativa ?? '44444B') }}" class="{{ ($active_tab ?? '') === 'ocorrencias' ? 'active' : '' }}"><span>!</span>Ocorrências</a>
+            <a href="{{ route('dashboard', $obra_ativa ?? '44444B', false) }}" class="{{ ($active_tab ?? '') === 'overview' ? 'active' : '' }}"><span>⌂</span>Resumo</a>
+            <a href="{{ route('dashboard.curva-abc', $obra_ativa ?? '44444B', false) }}" class="{{ ($active_tab ?? '') === 'curva-abc' ? 'active' : '' }}"><span>▥</span>ABC</a>
+            <a href="{{ route('dashboard.servicos', $obra_ativa ?? '44444B', false) }}" class="{{ ($active_tab ?? '') === 'servicos' ? 'active' : '' }}"><span>≡</span>Serviços</a>
+            <a href="{{ route('dashboard.ocorrencias', $obra_ativa ?? '44444B', false) }}" class="{{ ($active_tab ?? '') === 'ocorrencias' ? 'active' : '' }}"><span>!</span>Ocorrências</a>
         </nav>
     </div>
 
@@ -103,6 +114,7 @@
             </div>
 
             <form id="importForm" class="modal-body" action="{{ route('importar.excel') }}" method="POST" enctype="multipart/form-data">
+            <form id="importForm" class="modal-body" action="{{ route('importar.excel', [], false) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="field" style="margin-bottom: 14px;">
                     <label for="codigoObraImport">Código da Obra</label>
@@ -135,6 +147,7 @@
             </div>
 
             <form class="modal-body" action="{{ route('dashboard.orcamento', $obra_ativa ?? '44444B') }}" method="POST">
+            <form class="modal-body" action="{{ route('dashboard.orcamento', $obra_ativa ?? '44444B', false) }}" method="POST">
                 @csrf
                 <div class="field" style="margin-bottom: 14px;">
                     <label for="orcamentoAprovadoInput">Valor do Orçamento Aprovado (R$)</label>
@@ -188,6 +201,7 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script src="/js/dashboard.js"></script>
 </body>
 
 </html>
