@@ -16,6 +16,7 @@ return [
      */
     'paths' => [
         '/',
+        '/dashboard/44444B',
     ],
 
     /*

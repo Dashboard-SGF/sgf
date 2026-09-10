@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="SGF — Dashboard de Suprimentos e Gestão Financeira de Obras">
     <title>SGF — Suprimentos & Gestão Financeira</title>
-    <link rel="stylesheet" href="./css/dashboard.css">
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 </head>
 
 <body>
@@ -343,7 +343,7 @@
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./js/dashboard.js"></script>
+    <script src="{{ asset('js/dashboard.js') }}"></script>
 </body>
 
 </html>

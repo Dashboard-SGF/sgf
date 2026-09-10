@@ -14,10 +14,14 @@ class DashboardController extends Controller
         protected DashboardService $dashboardService
     ) {}
 
-    public function index(Request $request): View
+    public function index(?string $obra = null, Request $request): View
     {
-        $filters = $request->only(['obra', 'search', 'start_date', 'end_date']);
+        $filters = $request->only(['search', 'start_date', 'end_date']);
+        $filters['obra'] = $obra;
+
         $data = $this->dashboardService->getDashboardData($filters);
+        $data['obra_ativa'] = $obra;
+
         return view('dashboard', $data);
     }
 
@@ -27,8 +31,9 @@ class DashboardController extends Controller
             'arquivo' => 'required|mimes:xlsx,xls'
         ]);
 
+        // O código da obra é extraído durante a importação (padrão 44444B)
         Excel::import(new InsumosImport, $request->file('arquivo'));
 
-        return redirect()->back()->with('success', 'Planilha importada com sucesso!');
+        return redirect()->route('dashboard', '44444B')->with('success', 'Planilha importada com sucesso!');
     }
 }

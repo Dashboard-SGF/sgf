@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SGF — Seleção de Obras e Projetos">
+    <title>SGF — Hub de Obras</title>
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true"></div>
+                <div>
+                    <strong>SGF</strong>
+                    <small>Gestão & Fiscalização</small>
+                </div>
+            </div>
+
+            <nav class="nav" aria-label="Navegação principal">
+                <a class="active" href="{{ route('obras.index') }}"><span class="nav-dot"></span>Obras & Projetos</a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="mobile-brand">
+                    <div class="brand-mark" aria-hidden="true"></div>
+                    <strong>SGF</strong>
+                </div>
+
+                <div class="top-actions">
+                    <button class="btn primary" type="button" data-action="open-import">
+                        <span aria-hidden="true">＋</span>
+                        <span class="button-label">Importar Nova Planilha</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="container">
+                <section class="hero">
+                    <div>
+                        <div class="eyebrow">Módulo 01 · Suprimentos & Financeiro</div>
+                        <h1>Hub de Obras & Projetos</h1>
+                        <p>Selecione uma obra ativa para acessar o dashboard de indicadores ou faça a carga de novos dados.</p>
+                    </div>
+                </section>
+
+                <section class="section-grid" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-top: 20px;">
+                    @forelse ($obras as $obra)
+                        <article class="card kpi" style="cursor: pointer; transition: transform 0.15s, border-color 0.15s;"
+                                 onclick="window.location.href='{{ route('dashboard', $obra->codigo_obra) }}'"
+                                 onmouseover="this.style.borderColor='var(--brand)'; this.style.transform='translateY(-2px)';"
+                                 onmouseout="this.style.borderColor='var(--line)'; this.style.transform='none';">
+                            <div class="kpi-top">
+                                <div>
+                                    <div class="kpi-label">Código da Obra</div>
+                                    <div class="kpi-value" style="font-size: 22px; color: var(--brand);">{{ $obra->codigo_obra }}</div>
+                                    <div class="kpi-sub">{{ $obra->total_itens }} serviços/composições cadastradas</div>
+                                </div>
+                                <div class="mini-icon" aria-hidden="true">➔</div>
+                            </div>
+                            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 11px; color: var(--muted); font-weight: 700;">VALOR TOTAL GASTO</span>
+                                <strong style="font-size: 15px; color: var(--ink);">R$ {{ number_format($obra->total_gasto, 2, ',', '.') }}</strong>
+                            </div>
+                        </article>
+                    @empty
+                        <div class="card empty-state" style="grid-column: 1 / -1; padding: 40px 20px;">
+                            <strong>Nenhuma obra registrada no banco de dados.</strong>
+                            <p style="margin-top: 6px; color: var(--muted);">Clique em "Importar Nova Planilha" no topo para processar a planilha do professor.</p>
+                        </div>
+                    @endforelse
+                </section>
+            </div>
+        </main>
+    </div>
+
+    {{-- Modal de Importação --}}
+    <div class="modal" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+        <div class="modal-card">
+            <div class="modal-head">
+                <div>
+                    <h2 id="importTitle">Importar planilha de custos</h2>
+                    <p>Faça o upload do arquivo .xlsx ou .xls para registrar uma nova obra.</p>
+                </div>
+                <button class="btn icon ghost" type="button" data-action="close-import" aria-label="Fechar">×</button>
+            </div>
+
+            <form id="importForm" class="modal-body" action="{{ route('importar.excel') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="dropzone">
+                    <strong>Selecione a planilha legada</strong>
+                    <p>Arquivos .xlsx ou .xls (Composição de Obras).</p>
+                    <input id="excelFile" name="arquivo" type="file" accept=".xlsx,.xls" required>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn" type="button" data-action="close-import">Cancelar</button>
+                    <button class="btn primary" id="submitImport" type="submit">Validar e processar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="{{ asset('js/dashboard.js') }}"></script>
+</body>
+
+</html>
