@@ -889,8 +889,9 @@ th {
 }
 
 .modal-card {
-    width: min(520px, 100%);
-    overflow: hidden;
+    width: min(520px, 95vw);
+    max-height: 90vh;
+    overflow-y: auto;
     border-radius: 20px;
     background: #fff;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
@@ -1083,9 +1084,20 @@ textarea.control {
     }
 }
 
+.print-header {
+    display: none;
+}
+
 @media print {
+    @page {
+        size: A4 portrait;
+        margin: 1.2cm;
+    }
+
     body {
-        background: #fff;
+        background: #fff !important;
+        color: #000 !important;
+        font-size: 11pt;
     }
 
     .sidebar,
@@ -1093,26 +1105,48 @@ textarea.control {
     .mobile-nav,
     .filters,
     .modal,
-    .toast {
+    .toast,
+    .btn,
+    .pill[href],
+    form button,
+    [data-action] {
         display: none !important;
     }
 
+    .print-header {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-bottom: 12px;
+        margin-bottom: 24px;
+        border-bottom: 2px solid #152027;
+        color: #000;
+    }
+
     .main {
-        margin: 0;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .container {
-        padding: 0;
+        max-width: 100% !important;
+        padding: 0 !important;
     }
 
     .card {
         break-inside: avoid;
-        box-shadow: none;
+        page-break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        margin-bottom: 20px;
     }
 
+    .abc-list,
     .table-scroll {
         display: block !important;
-        overflow: visible;
+        max-height: none !important;
+        overflow: visible !important;
+        padding-right: 0 !important;
     }
 
     .order-mobile {
@@ -1120,23 +1154,33 @@ textarea.control {
     }
 
     .hero {
-        margin-top: 0;
+        margin-bottom: 16px;
     }
 
-    /* Limita a altura da Curva ABC no PC e adiciona rolagem bonita */
-    .abc-list {
-        display: grid;
-        gap: 12px;
-        max-height: 480px;
-        overflow-y: auto;
-        padding-right: 6px;
+    .hero h1 {
+        font-size: 20pt;
     }
 
-    .abc-list {
-        display: grid;
-        gap: 12px;
-        max-height: 500px;
-        overflow-y: auto;
-        padding-right: 8px;
+    .hero p {
+        color: #333 !important;
+    }
+
+    table {
+        width: 100% !important;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        border: 1px solid #ddd !important;
+        color: #000 !important;
+    }
+
+    th {
+        background: #f0f0f0 !important;
+    }
+
+    th:last-child,
+    td:last-child {
+        display: none !important;
     }
 }
