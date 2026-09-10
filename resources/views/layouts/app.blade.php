@@ -65,6 +65,14 @@
             </header>
 
             <div class="container">
+                <div class="print-header">
+                    <div>
+                        <strong>SGF — Relatório de Gestão Financeira de Obras</strong>
+                        <span style="display: block; font-size: 12px; font-weight: 500;">Obra: {{ $obra_ativa ?? 'Geral' }}</span>
+                    </div>
+                    <span style="font-size: 12px;">Emitido em: {{ date('d/m/Y H:i') }}</span>
+                </div>
+
                 @if (session('success'))
                     <div style="background: var(--ok-soft); color: var(--ok); padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-weight: 700; border: 1px solid #c2e2d5;">
                         {{ session('success') }}
