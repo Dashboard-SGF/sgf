@@ -20,20 +20,31 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, dom, fileinfo, gd, zip, openssl
+          extensions: mbstring, dom, fileinfo, gd, zip, openssl, sqlite3, pdo_sqlite
 
       - name: Instalar Dependências do Composer
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Preparar Arquivo de Ambiente (.env)
+      - name: Preparar Arquivo de Ambiente (.env) e Banco SQLite
         run: |
           cp .env.example .env
           php artisan key:generate
+          touch database/database.sqlite
+
+      - name: Executar Migrations e Seeder de Produção
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+        run: |
+          php artisan migrate --force
+          php artisan db:seed --force
 
       - name: Executar Exportação Estática (Spatie)
         env:
           APP_ENV: production
           APP_DEBUG: true
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
           SESSION_DRIVER: array
           CACHE_STORE: array
           QUEUE_CONNECTION: sync
