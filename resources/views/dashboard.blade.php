@@ -58,41 +58,49 @@
                     <div class="mode-badge">Dados simulados · Unidade 1</div>
                 </section>
 
-                <section class="filters" aria-label="Filtros do dashboard">
+                <form method="GET" action="{{ route('dashboard') }}" class="filters"
+                    aria-label="Filtros do dashboard">
                     <div class="field">
                         <label for="workFilter">Obra</label>
-                        <select class="control" id="workFilter">
+                        <select class="control" id="workFilter" name="obra">
                             <option value="">Todas as obras</option>
-                            <option value="Residencial Vista Alegre">Residencial Vista Alegre</option>
-                            <option value="Torre Atlântico">Torre Atlântico</option>
-                            <option value="Parque das Flores">Parque das Flores</option>
+                            @foreach (\App\Models\Servico::select('codigo_obra')->distinct()->pluck('codigo_obra') as $codigoObra)
+                                <option value="{{ $codigoObra }}"
+                                    {{ request('obra') == $codigoObra ? 'selected' : '' }}>
+                                    {{ $codigoObra }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
 
                     <div class="field">
                         <label for="startDate">Período inicial</label>
-                        <input class="control" id="startDate" type="date" value="2026-08-01">
+                        <input class="control" id="startDate" name="start_date" type="date"
+                            value="{{ request('start_date') }}">
                     </div>
 
                     <div class="field">
                         <label for="endDate">Período final</label>
-                        <input class="control" id="endDate" type="date" value="2026-09-03">
+                        <input class="control" id="endDate" name="end_date" type="date"
+                            value="{{ request('end_date') }}">
                     </div>
 
                     <div class="field search-field">
                         <label for="searchInput">Buscar pedido ou insumo</label>
-                        <input class="control" id="searchInput" type="search" placeholder="Código, fornecedor, item..." autocomplete="off">
+                        <input class="control" id="searchInput" name="search" type="search"
+                            placeholder="Código, tipo, item..." value="{{ request('search') }}" autocomplete="off">
                     </div>
 
-                    <button class="btn primary filter-button" id="applyFilters" type="button">Filtrar</button>
-                </section>
+                    <button class="btn primary filter-button" type="submit">Filtrar</button>
+                </form>
 
                 <section class="kpis" aria-label="Indicadores financeiros">
                     <article class="card kpi">
                         <div class="kpi-top">
                             <div>
                                 <div class="kpi-label">Orçamento aprovado</div>
-                                <div class="kpi-value">R$ {{ number_format($kpis['orcamento_total'], 2, ',', '.') }}</div>
+                                <div class="kpi-value">R$ {{ number_format($kpis['orcamento_total'], 2, ',', '.') }}
+                                </div>
                                 <div class="kpi-sub">Base de comparação do MVP</div>
                             </div>
                             <div class="mini-icon" aria-hidden="true">◎</div>
@@ -118,7 +126,9 @@
                             <div>
                                 <div class="kpi-label">Saldo remanescente</div>
                                 <div class="kpi-value">R$ {{ number_format($kpis['saldo'], 2, ',', '.') }}</div>
-                                <div class="kpi-sub">{{ $kpis['is_estourado'] ? 'Orçamento excedido' : 'Disponível para novas despesas' }}</div>
+                                <div class="kpi-sub">
+                                    {{ $kpis['is_estourado'] ? 'Orçamento excedido' : 'Disponível para novas despesas' }}
+                                </div>
                             </div>
                             <div class="mini-icon" aria-hidden="true">◒</div>
                         </div>
@@ -128,7 +138,8 @@
                         <div class="kpi-label">Pedidos que exigem atenção</div>
                         <div class="status-grid">
                             <div class="status-chip">Pendentes<strong>{{ $kpis['pedidos_pendentes'] }}</strong></div>
-                            <div class="status-chip danger-status">Divergências<strong>{{ $kpis['com_divergencia'] }}</strong></div>
+                            <div class="status-chip danger-status">
+                                Divergências<strong>{{ $kpis['com_divergencia'] }}</strong></div>
                         </div>
                     </article>
                 </section>
@@ -152,8 +163,10 @@
                             </div>
 
                             <div class="budget-values">
-                                <div><span>Gasto</span><strong>R$ {{ number_format($kpis['total_gasto'], 2, ',', '.') }}</strong></div>
-                                <div><span>Saldo</span><strong>R$ {{ number_format($kpis['saldo'], 2, ',', '.') }}</strong></div>
+                                <div><span>Gasto</span><strong>R$
+                                        {{ number_format($kpis['total_gasto'], 2, ',', '.') }}</strong></div>
+                                <div><span>Saldo</span><strong>R$
+                                        {{ number_format($kpis['saldo'], 2, ',', '.') }}</strong></div>
                             </div>
                         </div>
                     </article>
@@ -169,21 +182,22 @@
 
                         <div class="abc-list">
                             @foreach ($insumos_abc as $item)
-                            <div class="abc-item">
-                                <div class="abc-main">
-                                    <div class="abc-label">
-                                        <strong>{{ $item['nome'] }}</strong>
-                                        <span>R$ {{ number_format($item['valor'], 2, ',', '.') }}</span>
+                                <div class="abc-item">
+                                    <div class="abc-main">
+                                        <div class="abc-label">
+                                            <strong>{{ $item['nome'] }}</strong>
+                                            <span>R$ {{ number_format($item['valor'], 2, ',', '.') }}</span>
+                                        </div>
+                                        <div class="abc-bar">
+                                            <i class="abc-fill class-{{ $item['classe'] }}"
+                                                style="width: {{ $item['altura_pct'] }}%"></i>
+                                        </div>
                                     </div>
-                                    <div class="abc-bar">
-                                        <i class="abc-fill class-{{ $item['classe'] }}" style="width: {{ $item['altura_pct'] }}%"></i>
-                                    </div>
-                                </div>
 
-                                <div class="class-badge class-{{ strtoupper($item['classe']) }}">
-                                    {{ strtoupper($item['classe']) }}
+                                    <div class="class-badge class-{{ strtoupper($item['classe']) }}">
+                                        {{ strtoupper($item['classe']) }}
+                                    </div>
                                 </div>
-                            </div>
                             @endforeach
                         </div>
 
@@ -209,9 +223,9 @@
                             <thead>
                                 <tr>
                                     <th>Código</th>
-                                    <th>Fornecedor</th>
+                                    <th>Origem / Tipo</th>
                                     <th>Data</th>
-                                    <th>Item</th>
+                                    <th>Serviço / Insumo</th>
                                     <th>Quantidade</th>
                                     <th>Valor total</th>
                                     <th>Status</th>
@@ -219,19 +233,19 @@
                             </thead>
                             <tbody id="ordersTable">
                                 @foreach ($pedidos as $pedido)
-                                <tr
-                                    data-order-row
-                                    data-search="{{ strtolower($pedido['codigo'].' '.$pedido['fornecedor'].' '.$pedido['item']) }}"
-                                    data-date="{{ $pedido['data'] }}"
-                                    data-work="{{ $pedido['obra'] ?? '' }}">
-                                    <td><strong>{{ $pedido['codigo'] }}</strong></td>
-                                    <td>{{ $pedido['fornecedor'] }}</td>
-                                    <td>{{ $pedido['data'] }}</td>
-                                    <td>{{ $pedido['item'] }}</td>
-                                    <td>{{ $pedido['quantidade'] }}</td>
-                                    <td><strong>R$ {{ number_format($pedido['valor'], 2, ',', '.') }}</strong></td>
-                                    <td><span class="status {{ $pedido['status'] }}">{{ $pedido['status_label'] }}</span></td>
-                                </tr>
+                                    <tr data-order-row
+                                        data-search="{{ strtolower($pedido['codigo'] . ' ' . $pedido['fornecedor'] . ' ' . $pedido['item']) }}"
+                                        data-date="{{ $pedido['data'] }}" data-work="{{ $pedido['obra'] ?? '' }}">
+                                        <td><strong>{{ $pedido['codigo'] }}</strong></td>
+                                        <td>{{ $pedido['fornecedor'] }}</td>
+                                        <td>{{ $pedido['data'] }}</td>
+                                        <td>{{ $pedido['item'] }}</td>
+                                        <td>{{ $pedido['quantidade'] }}</td>
+                                        <td><strong>R$ {{ number_format($pedido['valor'], 2, ',', '.') }}</strong></td>
+                                        <td><span
+                                                class="status {{ $pedido['status'] }}">{{ $pedido['status_label'] }}</span>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -239,26 +253,24 @@
 
                     <div class="order-mobile" id="ordersMobile">
                         @foreach ($pedidos as $pedido)
-                        <article
-                            class="order-card"
-                            data-order-card
-                            data-search="{{ strtolower($pedido['codigo'].' '.$pedido['fornecedor'].' '.$pedido['item']) }}"
-                            data-date="{{ $pedido['data'] }}"
-                            data-work="{{ $pedido['obra'] ?? '' }}">
-                            <div class="order-top">
-                                <strong>{{ $pedido['codigo'] }}</strong>
-                                <span class="status {{ $pedido['status'] }}">{{ $pedido['status_label'] }}</span>
-                            </div>
-                            <div class="order-muted">{{ $pedido['fornecedor'] }} · {{ $pedido['item'] }}</div>
-                            <div class="order-bottom">
-                                <span>{{ $pedido['data'] }}</span>
-                                <strong>R$ {{ number_format($pedido['valor'], 2, ',', '.') }}</strong>
-                            </div>
-                        </article>
+                            <article class="order-card" data-order-card
+                                data-search="{{ strtolower($pedido['codigo'] . ' ' . $pedido['fornecedor'] . ' ' . $pedido['item']) }}"
+                                data-date="{{ $pedido['data'] }}" data-work="{{ $pedido['obra'] ?? '' }}">
+                                <div class="order-top">
+                                    <strong>{{ $pedido['codigo'] }}</strong>
+                                    <span class="status {{ $pedido['status'] }}">{{ $pedido['status_label'] }}</span>
+                                </div>
+                                <div class="order-muted">{{ $pedido['fornecedor'] }} · {{ $pedido['item'] }}</div>
+                                <div class="order-bottom">
+                                    <span>{{ $pedido['data'] }}</span>
+                                    <strong>R$ {{ number_format($pedido['valor'], 2, ',', '.') }}</strong>
+                                </div>
+                            </article>
                         @endforeach
                     </div>
 
-                    <div class="empty-state" id="ordersEmpty" hidden>Nenhum pedido encontrado com os filtros atuais.</div>
+                    <div class="empty-state" id="ordersEmpty" hidden>Nenhum pedido encontrado com os filtros atuais.
+                    </div>
                 </section>
 
                 <section class="card section-card occurrences-section" id="occurrences">
@@ -272,16 +284,16 @@
 
                     <div class="occ-list">
                         @forelse ($ocorrencias as $occ)
-                        <article class="occ">
-                            <div class="occ-icon" aria-hidden="true">!</div>
-                            <div>
-                                <strong>{{ $occ['codigo'] }}</strong>
-                                <p>{{ $occ['desc'] }}</p>
-                                <span class="occ-tag">{{ $occ['tag'] }}</span>
-                            </div>
-                        </article>
+                            <article class="occ">
+                                <div class="occ-icon" aria-hidden="true">!</div>
+                                <div>
+                                    <strong>{{ $occ['codigo'] }}</strong>
+                                    <p>{{ $occ['desc'] }}</p>
+                                    <span class="occ-tag">{{ $occ['tag'] }}</span>
+                                </div>
+                            </article>
                         @empty
-                        <div class="empty-state">Nenhuma ocorrência pendente.</div>
+                            <div class="empty-state">Nenhuma ocorrência pendente.</div>
                         @endforelse
                     </div>
                 </section>
@@ -303,10 +315,12 @@
                     <h2 id="importTitle">Importar planilha de custos</h2>
                     <p>O upload funciona apenas na implantação dinâmica do Laravel.</p>
                 </div>
-                <button class="btn icon ghost" type="button" data-action="close-import" aria-label="Fechar">×</button>
+                <button class="btn icon ghost" type="button" data-action="close-import"
+                    aria-label="Fechar">×</button>
             </div>
 
-            <form id="importForm" class="modal-body" action="/importar" method="POST" enctype="multipart/form-data">
+            <form id="importForm" class="modal-body" action="/importar" method="POST"
+                enctype="multipart/form-data">
                 @csrf
 
                 <div class="dropzone">

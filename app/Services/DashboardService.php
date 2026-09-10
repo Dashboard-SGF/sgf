@@ -10,21 +10,26 @@ class DashboardService
         protected DashboardRepository $repository
     ) {}
 
-    public function getDashboardData(): array
+    public function getDashboardData(array $filters = []): array
     {
-        $data = $this->repository->getDadosDashboard();
+        $data = $this->repository->getDadosDashboard($filters);
 
-        $saldo = $data['orcamento_total'] - $data['total_gasto'];
-        $percentualExecutado = ($data['total_gasto'] / $data['orcamento_total']) * 100;
+        $totalGasto = $data['total_gasto'];
+        $orcamentoTotal = $data['orcamento_total'];
+
+        $saldo = $orcamentoTotal - $totalGasto;
+        $percentualExecutado = $orcamentoTotal > 0
+            ? ($totalGasto / $orcamentoTotal) * 100
+            : 0;
 
         // Regra da Curva ABC (RN-01)
-        $insumosComClasse = $this->calcularCurvaABC($data['insumos'], $data['total_gasto']);
+        $insumosComClasse = $this->calcularCurvaABC($data['insumos'], $totalGasto);
 
         return [
             'kpis' => [
-                'total_gasto' => $data['total_gasto'],
+                'total_gasto' => $totalGasto,
                 'saldo' => $saldo,
-                'orcamento_total' => $data['orcamento_total'],
+                'orcamento_total' => $orcamentoTotal,
                 'percentual_executado' => round($percentualExecutado, 1),
                 'pedidos_pendentes' => $data['pedidos_pendentes'],
                 'com_divergencia' => $data['com_divergencia'],
@@ -38,6 +43,10 @@ class DashboardService
 
     private function calcularCurvaABC(array $insumos, float $totalGasto): array
     {
+        if (empty($insumos) || $totalGasto <= 0) {
+            return [];
+        }
+
         usort($insumos, fn($a, $b) => $b['valor'] <=> $a['valor']);
 
         $acumulado = 0;

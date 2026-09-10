@@ -1113,4 +1113,21 @@ th {
     .hero {
         margin-top: 0;
     }
+
+    /* Limita a altura da Curva ABC no PC e adiciona rolagem bonita */
+    .abc-list {
+        display: grid;
+        gap: 12px;
+        max-height: 480px;
+        overflow-y: auto;
+        padding-right: 6px;
+    }
+
+    .abc-list {
+        display: grid;
+        gap: 12px;
+        max-height: 500px;
+        overflow-y: auto;
+        padding-right: 8px;
+    }
 }
