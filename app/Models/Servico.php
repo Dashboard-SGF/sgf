@@ -21,5 +21,6 @@ class Servico extends Model
         'valor_com_bdi',
         'valor_parcela',
         'status',
+        'observacao',
     ];
 }

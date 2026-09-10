@@ -4,27 +4,22 @@
     const $ = (selector, root = document) => root.querySelector(selector);
     const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 
-    const modal = $("#importModal") || $("#modal");
+    // Modais
+    const importModal = $("#importModal");
+    const budgetModal = $("#budgetModal");
+    const statusModal = $("#statusModal");
+
     const importForm = $("#importForm");
-    const excelFile = $("#excelFile") || $("#file");
-    const staticWarning = $("#staticWarning");
+    const excelFile = $("#excelFile");
     const submitImport = $("#submitImport");
     const toast = $("#toast");
 
+    const statusForm = $("#statusForm");
+    const statusItemName = $("#statusItemName");
+    const serviceStatusSelect = $("#serviceStatusSelect");
+    const serviceObservacaoInput = $("#serviceObservacaoInput");
+
     const searchInput = $("#searchInput");
-    const startDate = $("#startDate");
-    const endDate = $("#endDate");
-    const workFilter = $("#workFilter");
-    const applyFiltersButton = $("#applyFilters");
-
-    const orderRows = $$("[data-order-row]");
-    const orderCards = $$("[data-order-card]");
-    const ordersEmpty = $("#ordersEmpty");
-    const visibleOrdersCount = $("#visibleOrdersCount");
-
-    const isStaticMode =
-        window.location.protocol === "file:" ||
-        window.location.hostname.endsWith("github.io");
 
     function normalize(value) {
         return String(value ?? "")
@@ -34,457 +29,141 @@
             .trim();
     }
 
-    function parseDate(value) {
-        if (!value) return null;
+    // Busca global em tempo real sincronizando Curva ABC e Tabela de Serviços
+    function applyLiveFilter() {
+        const query = normalize(searchInput?.value);
 
-        // Formato yyyy-mm-dd
-        if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-            const [year, month, day] = value.split("-").map(Number);
+        // 1. Filtrar Curva ABC
+        $$('.abc-item').forEach(item => {
+            const searchText = normalize(item.dataset.search || item.textContent);
+            const matches = !query || searchText.includes(query);
+            item.style.display = matches ? "" : "none";
+        });
 
-            return new Date(
-                year,
-                month - 1,
-                day,
-                12,
-                0,
-                0
-            );
-        }
-
-        // Formato dd/mm/yyyy
-        const br = value.match(
-            /^(\d{2})\/(\d{2})\/(\d{4})$/
-        );
-
-        if (br) {
-            return new Date(
-                Number(br[3]),
-                Number(br[2]) - 1,
-                Number(br[1]),
-                12,
-                0,
-                0
-            );
-        }
-
-        return null;
-    }
-
-    function dateMatches(value) {
-        const orderDate = parseDate(value);
-
-        // Se não conseguir interpretar a data,
-        // não escondemos o pedido.
-        if (!orderDate) {
-            return true;
-        }
-
-        const minDate = startDate?.value
-            ? parseDate(startDate.value)
-            : null;
-
-        const maxDate = endDate?.value
-            ? parseDate(endDate.value)
-            : null;
-
-        if (minDate && orderDate < minDate) {
-            return false;
-        }
-
-        if (maxDate) {
-            maxDate.setHours(23, 59, 59, 999);
-
-            if (orderDate > maxDate) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    function elementMatchesFilters(element) {
-        if (!element) {
-            return false;
-        }
-
-        const query = normalize(
-            searchInput?.value
-        );
-
-        const searchText = normalize(
-            element.dataset.search
-        );
-
-        const selectedWork = normalize(
-            workFilter?.value
-        );
-
-        const itemWork = normalize(
-            element.dataset.work
-        );
-
-        const matchesSearch =
-            !query ||
-            searchText.includes(query);
-
-        const matchesPeriod =
-            dateMatches(
-                element.dataset.date
-            );
-
-        /*
-         * O Repository atual ainda pode não possuir
-         * "obra" em cada pedido.
-         *
-         * Enquanto data-work estiver vazio,
-         * o filtro de obra não esconde o item.
-         */
-        const matchesWork =
-            !selectedWork ||
-            !itemWork ||
-            selectedWork === itemWork;
-
-        return (
-            matchesSearch &&
-            matchesPeriod &&
-            matchesWork
-        );
-    }
-
-    function setVisible(element, visible) {
-        if (!element) {
-            return;
-        }
-
-        element.hidden = !visible;
-
-        /*
-         * Segurança extra caso algum CSS
-         * sobrescreva o comportamento de [hidden].
-         */
-        element.style.display =
-            visible ? "" : "none";
-    }
-
-    function applyFilters() {
+        // 2. Filtrar Tabela de Serviços & Cards Mobile
         let visibleCount = 0;
-
-        orderRows.forEach((row) => {
-            const visible =
-                elementMatchesFilters(row);
-
-            setVisible(row, visible);
-
-            if (visible) {
-                visibleCount += 1;
-            }
+        $$('[data-order-row]').forEach(row => {
+            const searchText = normalize(row.dataset.search || row.textContent);
+            const matches = !query || searchText.includes(query);
+            row.style.display = matches ? "" : "none";
+            if (matches) visibleCount++;
         });
 
-        /*
-         * No mobile os mesmos pedidos
-         * aparecem em cards.
-         *
-         * Não incrementamos o contador novamente.
-         */
-        orderCards.forEach((card) => {
-            setVisible(
-                card,
-                elementMatchesFilters(card)
-            );
+        $$('[data-order-card]').forEach(card => {
+            const searchText = normalize(card.dataset.search || card.textContent);
+            const matches = !query || searchText.includes(query);
+            card.style.display = matches ? "" : "none";
         });
 
-        if (visibleOrdersCount) {
-            visibleOrdersCount.textContent =
-                `${visibleCount} ${visibleCount === 1
-                    ? "pedido"
-                    : "pedidos"
-                }`;
-        }
-
-        if (ordersEmpty) {
-            ordersEmpty.hidden =
-                visibleCount !== 0;
-
-            ordersEmpty.style.display =
-                visibleCount === 0
-                    ? ""
-                    : "none";
+        const visibleCountElem = $("#visibleOrdersCount");
+        if (visibleCountElem && visibleCountElem.tagName !== 'A') {
+            visibleCountElem.textContent = `${visibleCount} ${visibleCount === 1 ? 'item' : 'itens'}`;
         }
     }
 
-    function openModal() {
-        if (!modal) {
-            return;
-        }
+    searchInput?.addEventListener("input", applyLiveFilter);
 
-        modal.classList.add("open");
-
-        document.body.style.overflow =
-            "hidden";
-
-        /*
-         * GitHub Pages não executa PHP,
-         * então upload de Excel não pode funcionar.
-         */
-        if (staticWarning) {
-            staticWarning.hidden =
-                !isStaticMode;
-        }
-
-        if (submitImport) {
-            submitImport.disabled =
-                isStaticMode;
-
-            if (isStaticMode) {
-                submitImport.title =
-                    "A importação real exige a versão Laravel em um servidor PHP.";
-            } else {
-                submitImport.removeAttribute(
-                    "title"
-                );
-            }
-        }
-
-        window.setTimeout(() => {
-            excelFile?.focus();
-        }, 50);
+    // Modal Importação
+    function openImportModal() {
+        if (!importModal) return;
+        importModal.classList.add("open");
+        document.body.style.overflow = "hidden";
+        setTimeout(() => excelFile?.focus(), 50);
     }
 
-    function closeModal() {
-        if (!modal) {
-            return;
-        }
-
-        modal.classList.remove("open");
-
+    function closeImportModal() {
+        if (!importModal) return;
+        importModal.classList.remove("open");
         document.body.style.overflow = "";
     }
 
-    let toastTimer = null;
-
-    function showToast(message) {
-        if (!toast) {
-            console.info(message);
-            return;
-        }
-
-        toast.textContent = message;
-
-        toast.classList.add("show");
-
-        if (toastTimer) {
-            window.clearTimeout(
-                toastTimer
-            );
-        }
-
-        toastTimer =
-            window.setTimeout(() => {
-                toast.classList.remove(
-                    "show"
-                );
-            }, 2800);
+    // Modal Orçamento
+    function openBudgetModal() {
+        if (!budgetModal) return;
+        budgetModal.classList.add("open");
+        document.body.style.overflow = "hidden";
     }
 
-    function simulate() {
-        if (isStaticMode) {
-            showToast(
-                "No GitHub Pages a importação fica desativada. Use a versão dinâmica do Laravel."
-            );
-
-            return;
-        }
-
-        if (!excelFile?.files?.length) {
-            showToast(
-                "Selecione uma planilha .xlsx ou .xls."
-            );
-
-            return;
-        }
-
-        showToast(
-            "Arquivo selecionado. Na versão Laravel ele será enviado para o backend."
-        );
+    function closeBudgetModal() {
+        if (!budgetModal) return;
+        budgetModal.classList.remove("open");
+        document.body.style.overflow = "";
     }
 
-    /*
-     * Botões do HTML novo
-     */
+    // Modal Status
+    function openStatusModal(button) {
+        if (!statusModal || !statusForm) return;
 
-    $$(
-        '[data-action="open-import"]'
-    ).forEach((button) => {
-        button.addEventListener(
-            "click",
-            openModal
-        );
-    });
+        const id = button.dataset.id;
+        const code = button.dataset.code;
+        const item = button.dataset.item;
+        const status = button.dataset.status;
+        const observacao = button.dataset.observacao;
 
-    $$(
-        '[data-action="close-import"]'
-    ).forEach((button) => {
-        button.addEventListener(
-            "click",
-            closeModal
-        );
-    });
-
-    $$(
-        '[data-action="print"]'
-    ).forEach((button) => {
-        button.addEventListener(
-            "click",
-            () => window.print()
-        );
-    });
-
-    /*
-     * Fecha ao clicar fora do modal
-     */
-
-    modal?.addEventListener(
-        "click",
-        (event) => {
-            if (event.target === modal) {
-                closeModal();
-            }
+        statusForm.action = `/servicos/${id}/status`;
+        if (statusItemName) {
+            statusItemName.textContent = `${code} — ${item}`;
         }
-    );
-
-    /*
-     * Fecha com ESC
-     */
-
-    document.addEventListener(
-        "keydown",
-        (event) => {
-            if (
-                event.key === "Escape" &&
-                modal?.classList.contains(
-                    "open"
-                )
-            ) {
-                closeModal();
-            }
+        if (serviceStatusSelect) {
+            serviceStatusSelect.value = status || 'delivered';
         }
-    );
-
-    /*
-     * Filtros
-     */
-
-    applyFiltersButton
-        ?.addEventListener(
-            "click",
-            applyFilters
-        );
-
-    searchInput
-        ?.addEventListener(
-            "input",
-            applyFilters
-        );
-
-    startDate
-        ?.addEventListener(
-            "change",
-            applyFilters
-        );
-
-    endDate
-        ?.addEventListener(
-            "change",
-            applyFilters
-        );
-
-    workFilter
-        ?.addEventListener(
-            "change",
-            applyFilters
-        );
-
-    /*
-     * Importação Excel
-     */
-
-    importForm?.addEventListener(
-        "submit",
-        (event) => {
-            if (isStaticMode) {
-                event.preventDefault();
-
-                showToast(
-                    "A importação de Excel só funciona na implantação dinâmica do Laravel."
-                );
-
-                return;
-            }
-
-            if (
-                !excelFile
-                    ?.files
-                    ?.length
-            ) {
-                event.preventDefault();
-
-                showToast(
-                    "Selecione uma planilha .xlsx ou .xls."
-                );
-
-                return;
-            }
-
-            if (submitImport) {
-                submitImport.disabled =
-                    true;
-
-                submitImport.textContent =
-                    "Processando...";
-            }
-
-            /*
-             * Na versão dinâmica,
-             * NÃO usamos preventDefault().
-             *
-             * O formulário continua normalmente
-             * para o POST /importar do Laravel.
-             */
+        if (serviceObservacaoInput) {
+            serviceObservacaoInput.value = observacao || '';
         }
-    );
 
-    /*
-     * Marca visualmente que estamos
-     * na versão estática.
-     */
-
-    if (isStaticMode) {
-        document.documentElement.dataset.mode =
-            "static";
+        statusModal.classList.add("open");
+        document.body.style.overflow = "hidden";
     }
 
-    /*
-     * Compatibilidade com seu HTML antigo,
-     * que usava:
-     *
-     * onclick="openModal()"
-     * onclick="closeModal()"
-     * onclick="simulate()"
-     */
+    function closeStatusModal() {
+        if (!statusModal) return;
+        statusModal.classList.remove("open");
+        document.body.style.overflow = "";
+    }
 
-    window.openModal = openModal;
-    window.closeModal = closeModal;
-    window.simulate = simulate;
+    // Event Listeners para Importação
+    $$('[data-action="open-import"]').forEach(btn => btn.addEventListener("click", openImportModal));
+    $$('[data-action="close-import"]').forEach(btn => btn.addEventListener("click", closeImportModal));
 
-    /*
-     * Caso queira chamar o filtro
-     * manualmente pelo console ou HTML.
-     */
-    window.applyDashboardFilters =
-        applyFilters;
+    // Event Listeners para Orçamento
+    $$('[data-action="open-budget-modal"]').forEach(btn => btn.addEventListener("click", openBudgetModal));
+    $$('[data-action="close-budget-modal"]').forEach(btn => btn.addEventListener("click", closeBudgetModal));
 
-    /*
-     * Executa uma vez ao carregar.
-     */
-    applyFilters();
+    // Event Listeners para Status
+    $$('[data-action="open-status-modal"]').forEach(btn => btn.addEventListener("click", (e) => {
+        openStatusModal(e.currentTarget);
+    }));
+    $$('[data-action="close-status-modal"]').forEach(btn => btn.addEventListener("click", closeStatusModal));
+
+    // Exportar Print
+    $$('[data-action="print"]').forEach(btn => btn.addEventListener("click", () => window.print()));
+
+    // Fechar modais ao clicar fora
+    [importModal, budgetModal, statusModal].forEach(m => {
+        m?.addEventListener("click", (event) => {
+            if (event.target === m) {
+                closeImportModal();
+                closeBudgetModal();
+                closeStatusModal();
+            }
+        });
+    });
+
+    // Fechar modais com ESC
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeImportModal();
+            closeBudgetModal();
+            closeStatusModal();
+        }
+    });
+
+    // Validação de formulários
+    importForm?.addEventListener("submit", () => {
+        if (submitImport) {
+            submitImport.disabled = true;
+            submitImport.textContent = "Processando...";
+        }
+    });
+
 })();

@@ -580,6 +580,9 @@ a:focus-visible {
 .abc-list {
     display: grid;
     gap: 12px;
+    max-height: 480px;
+    overflow-y: auto;
+    padding-right: 6px;
 }
 
 .abc-item {
@@ -688,7 +691,8 @@ a:focus-visible {
 }
 
 .table-scroll {
-    overflow: auto;
+    max-height: 480px;
+    overflow-y: auto;
 }
 
 table {
@@ -1036,8 +1040,13 @@ th {
     }
 
     .section-grid {
-        grid-template-columns: 0.9fr 1.1fr;
+        grid-template-columns: 1fr 1fr;
     }
+
+textarea.control {
+    height: auto;
+    padding: 10px 12px;
+}
 
     .mobile-nav {
         display: none;

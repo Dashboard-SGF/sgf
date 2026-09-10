@@ -21,7 +21,7 @@
             </div>
 
             <nav class="nav" aria-label="Navegação principal">
-                <a class="active" href="{{ route('obras.index') }}"><span class="nav-dot"></span>Obras & Projetos</a>
+                <a class="active" href="{{ route('obras.index') }}"><span class="nav-dot"></span>Hub de Obras</a>
             </nav>
         </aside>
 
@@ -41,6 +41,12 @@
             </header>
 
             <div class="container">
+                @if (session('success'))
+                    <div style="background: var(--ok-soft); color: var(--ok); padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-weight: 700; border: 1px solid #c2e2d5;">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <section class="hero">
                     <div>
                         <div class="eyebrow">Módulo 01 · Suprimentos & Financeiro</div>
@@ -59,19 +65,25 @@
                                 <div>
                                     <div class="kpi-label">Código da Obra</div>
                                     <div class="kpi-value" style="font-size: 22px; color: var(--brand);">{{ $obra->codigo_obra }}</div>
-                                    <div class="kpi-sub">{{ $obra->total_itens }} serviços/composições cadastradas</div>
+                                    <div class="kpi-sub">{{ $obra->total_itens }} serviços cadastrados</div>
                                 </div>
                                 <div class="mini-icon" aria-hidden="true">➔</div>
                             </div>
                             <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 11px; color: var(--muted); font-weight: 700;">VALOR TOTAL GASTO</span>
+                                <span style="font-size: 11px; color: var(--muted); font-weight: 700;">TOTAL GASTO</span>
                                 <strong style="font-size: 15px; color: var(--ink);">R$ {{ number_format($obra->total_gasto, 2, ',', '.') }}</strong>
                             </div>
+                            @if($obra->orcamento_aprovado !== null)
+                                <div style="margin-top: 6px; display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 11px; color: var(--muted); font-weight: 700;">ORÇAMENTO APROVADO</span>
+                                    <strong style="font-size: 13px; color: var(--brand);">R$ {{ number_format($obra->orcamento_aprovado, 2, ',', '.') }}</strong>
+                                </div>
+                            @endif
                         </article>
                     @empty
                         <div class="card empty-state" style="grid-column: 1 / -1; padding: 40px 20px;">
                             <strong>Nenhuma obra registrada no banco de dados.</strong>
-                            <p style="margin-top: 6px; color: var(--muted);">Clique em "Importar Nova Planilha" no topo para processar a planilha do professor.</p>
+                            <p style="margin-top: 6px; color: var(--muted);">Clique em "Importar Nova Planilha" no topo para processar a planilha de custos.</p>
                         </div>
                     @endforelse
                 </section>
@@ -85,16 +97,21 @@
             <div class="modal-head">
                 <div>
                     <h2 id="importTitle">Importar planilha de custos</h2>
-                    <p>Faça o upload do arquivo .xlsx ou .xls para registrar uma nova obra.</p>
+                    <p>Faça o upload do arquivo .xlsx ou .xls para registrar uma obra.</p>
                 </div>
                 <button class="btn icon ghost" type="button" data-action="close-import" aria-label="Fechar">×</button>
             </div>
 
             <form id="importForm" class="modal-body" action="{{ route('importar.excel') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                <div class="field" style="margin-bottom: 14px;">
+                    <label for="codigoObraInput">Código da Obra (Opcional)</label>
+                    <input class="control" id="codigoObraInput" name="codigo_obra" type="text" placeholder="Ex: 44444B (se vazio, usa nome do arquivo)">
+                </div>
+
                 <div class="dropzone">
-                    <strong>Selecione a planilha legada</strong>
-                    <p>Arquivos .xlsx ou .xls (Composição de Obras).</p>
+                    <strong>Selecione a planilha (.xlsx / .xls)</strong>
+                    <p>Sobrescrita limpa: caso a obra já exista, os dados anteriores serão atualizados.</p>
                     <input id="excelFile" name="arquivo" type="file" accept=".xlsx,.xls" required>
                 </div>
 
