@@ -17,6 +17,9 @@ return [
     'paths' => [
         '/',
         '/dashboard/44444B',
+        '/dashboard/44444B/curva-abc',
+        '/dashboard/44444B/servicos',
+        '/dashboard/44444B/ocorrencias',
     ],
 
     /*
@@ -28,7 +31,7 @@ return [
      */
     'include_files' => [
         'public/css' => 'css',
-        'public/js' => 'js',
+        'public/js'  => 'js',
     ],
 
     /*
