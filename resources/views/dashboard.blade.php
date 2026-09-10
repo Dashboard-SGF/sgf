@@ -1,335 +1,268 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SGF — Dashboard de Suprimentos e Gestão Financeira de Obras">
-    <title>SGF — Suprimentos & Gestão Financeira</title>
-    <link rel="stylesheet" href="./css/dashboard.css">
-</head>
+@section('title', "SGF — Visão Financeira Obra {$obra_ativa}")
 
-<body>
-    <div class="app">
-        <aside class="sidebar">
-            <div class="brand">
-                <div class="brand-mark" aria-hidden="true"></div>
-                <div>
-                    <strong>SGF</strong>
-                    <small>Gestão & Fiscalização</small>
-                </div>
-            </div>
-
-            <nav class="nav" aria-label="Navegação principal">
-                <a class="active" href="#overview"><span class="nav-dot"></span>Visão financeira</a>
-                <a href="#abc"><span class="nav-dot"></span>Curva ABC</a>
-                <a href="#orders"><span class="nav-dot"></span>Pedidos</a>
-                <a href="#occurrences"><span class="nav-dot"></span>Ocorrências</a>
-            </nav>
-        </aside>
-
-        <main class="main">
-            <header class="topbar">
-                <div class="mobile-brand">
-                    <div class="brand-mark" aria-hidden="true"></div>
-                    <strong>SGF</strong>
-                </div>
-
-                <div class="top-actions">
-                    <button class="btn" type="button" data-action="print">
-                        <span aria-hidden="true">⇩</span>
-                        <span class="button-label">Exportar</span>
-                    </button>
-                    <button class="btn primary" type="button" data-action="open-import">
-                        <span aria-hidden="true">＋</span>
-                        <span class="button-label">Importar Excel</span>
-                    </button>
-                </div>
-            </header>
-
-            <div class="container" id="overview">
-                <section class="hero">
-                    <div>
-                        <div class="eyebrow">Módulo 01 · Suprimentos & Financeiro</div>
-                        <h1>Visão financeira das obras</h1>
-                        <p>Acompanhe orçamento, custos, pedidos e materiais de maior impacto em um único painel.</p>
-                    </div>
-
-                    <div class="mode-badge">Dados simulados · Unidade 1</div>
-                </section>
-
-                <section class="filters" aria-label="Filtros do dashboard">
-                    <div class="field">
-                        <label for="workFilter">Obra</label>
-                        <select class="control" id="workFilter">
-                            <option value="">Todas as obras</option>
-                            <option value="Residencial Vista Alegre">Residencial Vista Alegre</option>
-                            <option value="Torre Atlântico">Torre Atlântico</option>
-                            <option value="Parque das Flores">Parque das Flores</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="startDate">Período inicial</label>
-                        <input class="control" id="startDate" type="date" value="2026-08-01">
-                    </div>
-
-                    <div class="field">
-                        <label for="endDate">Período final</label>
-                        <input class="control" id="endDate" type="date" value="2026-09-03">
-                    </div>
-
-                    <div class="field search-field">
-                        <label for="searchInput">Buscar pedido ou insumo</label>
-                        <input class="control" id="searchInput" type="search" placeholder="Código, fornecedor, item..." autocomplete="off">
-                    </div>
-
-                    <button class="btn primary filter-button" id="applyFilters" type="button">Filtrar</button>
-                </section>
-
-                <section class="kpis" aria-label="Indicadores financeiros">
-                    <article class="card kpi">
-                        <div class="kpi-top">
-                            <div>
-                                <div class="kpi-label">Orçamento aprovado</div>
-                                <div class="kpi-value">R$ {{ number_format($kpis['orcamento_total'], 2, ',', '.') }}</div>
-                                <div class="kpi-sub">Base de comparação do MVP</div>
-                            </div>
-                            <div class="mini-icon" aria-hidden="true">◎</div>
-                        </div>
-                    </article>
-
-                    <article class="card kpi">
-                        <div class="kpi-top">
-                            <div>
-                                <div class="kpi-label">Total gasto</div>
-                                <div class="kpi-value">R$ {{ number_format($kpis['total_gasto'], 2, ',', '.') }}</div>
-                                <div class="kpi-sub">{{ $kpis['percentual_executado'] }}% do orçamento aprovado</div>
-                            </div>
-                            <div class="mini-icon" aria-hidden="true">↗</div>
-                        </div>
-                        <div class="progress" aria-label="Percentual executado do orçamento">
-                            <i style="width: {{ min($kpis['percentual_executado'], 100) }}%"></i>
-                        </div>
-                    </article>
-
-                    <article class="card kpi {{ $kpis['is_estourado'] ? 'danger-card' : '' }}">
-                        <div class="kpi-top">
-                            <div>
-                                <div class="kpi-label">Saldo remanescente</div>
-                                <div class="kpi-value">R$ {{ number_format($kpis['saldo'], 2, ',', '.') }}</div>
-                                <div class="kpi-sub">{{ $kpis['is_estourado'] ? 'Orçamento excedido' : 'Disponível para novas despesas' }}</div>
-                            </div>
-                            <div class="mini-icon" aria-hidden="true">◒</div>
-                        </div>
-                    </article>
-
-                    <article class="card kpi">
-                        <div class="kpi-label">Pedidos que exigem atenção</div>
-                        <div class="status-grid">
-                            <div class="status-chip">Pendentes<strong>{{ $kpis['pedidos_pendentes'] }}</strong></div>
-                            <div class="status-chip danger-status">Divergências<strong>{{ $kpis['com_divergencia'] }}</strong></div>
-                        </div>
-                    </article>
-                </section>
-
-                <section class="section-grid">
-                    <article class="card section-card">
-                        <div class="section-head">
-                            <div>
-                                <h2>Execução do orçamento</h2>
-                                <p>Comparativo entre valor realizado e saldo disponível.</p>
-                            </div>
-                            <span class="pill">Orçado × realizado</span>
-                        </div>
-
-                        <div class="budget-summary">
-                            <div class="donut" style="--executed: {{ min($kpis['percentual_executado'], 100) }}%;">
-                                <div class="donut-center">
-                                    <strong>{{ $kpis['percentual_executado'] }}%</strong>
-                                    <span>executado</span>
-                                </div>
-                            </div>
-
-                            <div class="budget-values">
-                                <div><span>Gasto</span><strong>R$ {{ number_format($kpis['total_gasto'], 2, ',', '.') }}</strong></div>
-                                <div><span>Saldo</span><strong>R$ {{ number_format($kpis['saldo'], 2, ',', '.') }}</strong></div>
-                            </div>
-                        </div>
-                    </article>
-
-                    <article class="card section-card" id="abc">
-                        <div class="section-head">
-                            <div>
-                                <h2>Curva ABC de custos</h2>
-                                <p>Insumos ordenados pelo impacto financeiro acumulado.</p>
-                            </div>
-                            <span class="pill">A 80% · B 15% · C 5%</span>
-                        </div>
-
-                        <div class="abc-list">
-                            @foreach ($insumos_abc as $item)
-                            <div class="abc-item">
-                                <div class="abc-main">
-                                    <div class="abc-label">
-                                        <strong>{{ $item['nome'] }}</strong>
-                                        <span>R$ {{ number_format($item['valor'], 2, ',', '.') }}</span>
-                                    </div>
-                                    <div class="abc-bar">
-                                        <i class="abc-fill class-{{ $item['classe'] }}" style="width: {{ $item['altura_pct'] }}%"></i>
-                                    </div>
-                                </div>
-
-                                <div class="class-badge class-{{ strtoupper($item['classe']) }}">
-                                    {{ strtoupper($item['classe']) }}
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-
-                        <div class="legend">
-                            <span><b>A</b> · alto impacto</span>
-                            <span><b>B</b> · médio impacto</span>
-                            <span><b>C</b> · baixo impacto</span>
-                        </div>
-                    </article>
-                </section>
-
-                <section class="card table-card" id="orders">
-                    <div class="table-head">
-                        <div>
-                            <h2>Pedidos recentes</h2>
-                            <p>Pedidos mais recentes dentro do período selecionado.</p>
-                        </div>
-                        <span class="pill" id="visibleOrdersCount">{{ count($pedidos) }} pedidos</span>
-                    </div>
-
-                    <div class="table-scroll">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Fornecedor</th>
-                                    <th>Data</th>
-                                    <th>Item</th>
-                                    <th>Quantidade</th>
-                                    <th>Valor total</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ordersTable">
-                                @foreach ($pedidos as $pedido)
-                                <tr
-                                    data-order-row
-                                    data-search="{{ strtolower($pedido['codigo'].' '.$pedido['fornecedor'].' '.$pedido['item']) }}"
-                                    data-date="{{ $pedido['data'] }}"
-                                    data-work="{{ $pedido['obra'] ?? '' }}">
-                                    <td><strong>{{ $pedido['codigo'] }}</strong></td>
-                                    <td>{{ $pedido['fornecedor'] }}</td>
-                                    <td>{{ $pedido['data'] }}</td>
-                                    <td>{{ $pedido['item'] }}</td>
-                                    <td>{{ $pedido['quantidade'] }}</td>
-                                    <td><strong>R$ {{ number_format($pedido['valor'], 2, ',', '.') }}</strong></td>
-                                    <td><span class="status {{ $pedido['status'] }}">{{ $pedido['status_label'] }}</span></td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="order-mobile" id="ordersMobile">
-                        @foreach ($pedidos as $pedido)
-                        <article
-                            class="order-card"
-                            data-order-card
-                            data-search="{{ strtolower($pedido['codigo'].' '.$pedido['fornecedor'].' '.$pedido['item']) }}"
-                            data-date="{{ $pedido['data'] }}"
-                            data-work="{{ $pedido['obra'] ?? '' }}">
-                            <div class="order-top">
-                                <strong>{{ $pedido['codigo'] }}</strong>
-                                <span class="status {{ $pedido['status'] }}">{{ $pedido['status_label'] }}</span>
-                            </div>
-                            <div class="order-muted">{{ $pedido['fornecedor'] }} · {{ $pedido['item'] }}</div>
-                            <div class="order-bottom">
-                                <span>{{ $pedido['data'] }}</span>
-                                <strong>R$ {{ number_format($pedido['valor'], 2, ',', '.') }}</strong>
-                            </div>
-                        </article>
-                        @endforeach
-                    </div>
-
-                    <div class="empty-state" id="ordersEmpty" hidden>Nenhum pedido encontrado com os filtros atuais.</div>
-                </section>
-
-                <section class="card section-card occurrences-section" id="occurrences">
-                    <div class="section-head">
-                        <div>
-                            <h2>Ocorrências e divergências</h2>
-                            <p>Entregas parciais, avarias e inconsistências que exigem atenção.</p>
-                        </div>
-                        <span class="pill danger-pill">{{ count($ocorrencias) }} abertas</span>
-                    </div>
-
-                    <div class="occ-list">
-                        @forelse ($ocorrencias as $occ)
-                        <article class="occ">
-                            <div class="occ-icon" aria-hidden="true">!</div>
-                            <div>
-                                <strong>{{ $occ['codigo'] }}</strong>
-                                <p>{{ $occ['desc'] }}</p>
-                                <span class="occ-tag">{{ $occ['tag'] }}</span>
-                            </div>
-                        </article>
-                        @empty
-                        <div class="empty-state">Nenhuma ocorrência pendente.</div>
-                        @endforelse
-                    </div>
-                </section>
-            </div>
-        </main>
-
-        <nav class="mobile-nav" aria-label="Navegação mobile">
-            <a href="#overview" class="active"><span>⌂</span>Resumo</a>
-            <a href="#abc"><span>▥</span>ABC</a>
-            <a href="#orders"><span>≡</span>Pedidos</a>
-            <a href="#occurrences"><span>!</span>Ocorrências</a>
-        </nav>
-    </div>
-
-    <div class="modal" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
-        <div class="modal-card">
-            <div class="modal-head">
-                <div>
-                    <h2 id="importTitle">Importar planilha de custos</h2>
-                    <p>O upload funciona apenas na implantação dinâmica do Laravel.</p>
-                </div>
-                <button class="btn icon ghost" type="button" data-action="close-import" aria-label="Fechar">×</button>
-            </div>
-
-            <form id="importForm" class="modal-body" action="/importar" method="POST" enctype="multipart/form-data">
-                @csrf
-
-                <div class="dropzone">
-                    <strong>Selecione a planilha legada</strong>
-                    <p>Arquivos .xlsx ou .xls. O backend deve validar o cabeçalho antes de processar os dados.</p>
-                    <input id="excelFile" name="arquivo" type="file" accept=".xlsx,.xls" required>
-                </div>
-
-                <div class="static-warning" id="staticWarning" hidden>
-                    No GitHub Pages o sistema usa somente a massa de dados pré-carregada.
-                    A importação real exige a versão Laravel publicada em servidor PHP.
-                </div>
-
-                <div class="modal-actions">
-                    <button class="btn" type="button" data-action="close-import">Cancelar</button>
-                    <button class="btn primary" id="submitImport" type="submit">Validar e processar</button>
-                </div>
-            </form>
+@section('content')
+    <section class="hero">
+        <div>
+            <div class="eyebrow">Módulo 01 · Suprimentos & Financeiro</div>
+            <h1>Obra {{ $obra_ativa ?? 'Geral' }}</h1>
+            <p>Acompanhe orçamento, custos, pedidos e materiais de maior impacto em um único painel.</p>
         </div>
-    </div>
+    </section>
 
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="./js/dashboard.js"></script>
-</body>
+    <form method="GET" action="{{ route('dashboard', $obra_ativa) }}" class="filters" aria-label="Filtro de busca global" style="grid-template-columns: 1fr auto; align-items: end;">
+        <div class="field search-field">
+            <label for="searchInput">Busca global no banco de dados</label>
+            <input class="control" id="searchInput" name="search" type="search"
+                placeholder="Buscar por Código do Item, Descrição ou Origem (SINAPI, PRÓPRIA...)" value="{{ request('search') }}" autocomplete="off">
+        </div>
 
-</html>
+        <button class="btn primary filter-button" type="submit">Buscar</button>
+    </form>
+
+    <section class="kpis" aria-label="Indicadores financeiros">
+        <article class="card kpi">
+            <div class="kpi-top">
+                <div>
+                    <div class="kpi-label">Orçamento aprovado</div>
+                    <div class="kpi-value">R$ {{ number_format($kpis['orcamento_total'], 2, ',', '.') }}</div>
+                    <div class="kpi-sub">
+                        {{ $kpis['orcamento_custom'] ? 'Meta definida pelo gestor' : 'Soma total dos serviços calculados' }}
+                    </div>
+                </div>
+                <button class="btn icon ghost" type="button" data-action="open-budget-modal" title="Editar Orçamento Aprovado" style="border: 1px solid var(--line);">
+                    ✏️
+                </button>
+            </div>
+        </article>
+
+        <article class="card kpi">
+            <div class="kpi-top">
+                <div>
+                    <div class="kpi-label">Total gasto</div>
+                    <div class="kpi-value">R$ {{ number_format($kpis['total_gasto'], 2, ',', '.') }}</div>
+                    <div class="kpi-sub">{{ $kpis['percentual_executado'] }}% do orçamento aprovado</div>
+                </div>
+            </div>
+            <div class="progress" aria-label="Percentual executado do orçamento">
+                <i style="width: {{ min($kpis['percentual_executado'], 100) }}%"></i>
+            </div>
+        </article>
+
+        <article class="card kpi {{ $kpis['is_estourado'] ? 'danger-card' : '' }}">
+            <div class="kpi-top">
+                <div>
+                    <div class="kpi-label">Saldo remanescente</div>
+                    <div class="kpi-value">R$ {{ number_format($kpis['saldo'], 2, ',', '.') }}</div>
+                    <div class="kpi-sub">
+                        {{ $kpis['is_estourado'] ? 'Orçamento excedido' : 'Disponível para novas despesas' }}
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <article class="card kpi">
+            <div class="kpi-label">Itens que exigem atenção</div>
+            <div class="status-grid">
+                <div class="status-chip">Pendentes<strong>{{ $kpis['pedidos_pendentes'] }}</strong></div>
+                <div class="status-chip danger-status">
+                    Divergências<strong>{{ $kpis['com_divergencia'] }}</strong></div>
+            </div>
+        </article>
+    </section>
+
+    <section class="section-grid">
+        <article class="card section-card">
+            <div class="section-head">
+                <div>
+                    <h2>Execução do orçamento</h2>
+                    <p>Comparativo entre valor realizado e saldo disponível.</p>
+                </div>
+                <span class="pill">Orçado × realizado</span>
+            </div>
+
+            <div class="budget-summary">
+                <div class="donut" style="--executed: {{ min($kpis['percentual_executado'], 100) }}%;">
+                    <div class="donut-center">
+                        <strong>{{ $kpis['percentual_executado'] }}%</strong>
+                        <span>executado</span>
+                    </div>
+                </div>
+
+                <div class="budget-values">
+                    <div><span>Orçamento Aprovado</span><strong>R$ {{ number_format($kpis['orcamento_total'], 2, ',', '.') }}</strong></div>
+                    <div><span>Gasto Realizado</span><strong>R$ {{ number_format($kpis['total_gasto'], 2, ',', '.') }}</strong></div>
+                    <div><span>Saldo Remanescente</span><strong style="color: {{ $kpis['is_estourado'] ? 'var(--danger)' : 'var(--ink)' }};">R$ {{ number_format($kpis['saldo'], 2, ',', '.') }}</strong></div>
+                </div>
+            </div>
+        </article>
+
+        <article class="card section-card" id="abc">
+            <div class="section-head">
+                <div>
+                    <h2>Curva ABC de custos</h2>
+                    <p>Insumos ordenados pelo impacto financeiro acumulado.</p>
+                </div>
+                <a href="{{ route('dashboard.curva-abc', $obra_ativa) }}" class="pill" style="text-decoration: none;">Ver Detalhes →</a>
+            </div>
+
+            <div class="abc-list">
+                @forelse ($insumos_abc as $item)
+                    <div class="abc-item" data-search="{{ strtolower($item['nome']) }}">
+                        <div class="abc-main">
+                            <div class="abc-label">
+                                <strong>{{ $item['nome'] }}</strong>
+                                <span>R$ {{ number_format($item['valor'], 2, ',', '.') }}</span>
+                            </div>
+                            <div class="abc-bar">
+                                <i class="abc-fill class-{{ $item['classe'] }}"
+                                    style="width: {{ $item['altura_pct'] }}%"></i>
+                            </div>
+                        </div>
+
+                        <div class="class-badge class-{{ strtoupper($item['classe']) }}">
+                            {{ strtoupper($item['classe']) }}
+                        </div>
+                    </div>
+                @empty
+                    <div class="empty-state">Nenhum insumo cadastrado para esta obra.</div>
+                @endforelse
+            </div>
+
+            <div class="legend">
+                <span><b>A</b> · alto impacto</span>
+                <span><b>B</b> · médio impacto</span>
+                <span><b>C</b> · baixo impacto</span>
+            </div>
+        </article>
+    </section>
+
+    <section class="card table-card" id="orders">
+        <div class="table-head">
+            <div>
+                <h2>Serviços e Composições de Custos</h2>
+                <p>Lista de itens cadastrados no orçamento da obra.</p>
+            </div>
+            <a href="{{ route('dashboard.servicos', $obra_ativa) }}" class="pill" style="text-decoration: none;" id="visibleOrdersCount">{{ count($pedidos) }} itens (Ver Todos →)</a>
+        </div>
+
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Origem / Tipo</th>
+                        <th>Data</th>
+                        <th>Serviço / Insumo</th>
+                        <th>Quantidade</th>
+                        <th>Valor total</th>
+                        <th>Status</th>
+                        <th>Observação</th>
+                        <th style="text-align: center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTable">
+                    @forelse ($pedidos as $pedido)
+                        <tr data-order-row
+                            data-search="{{ strtolower($pedido['codigo'] . ' ' . $pedido['codigo_item'] . ' ' . $pedido['fornecedor'] . ' ' . $pedido['item']) }}">
+                            <td><strong>{{ $pedido['codigo'] }}</strong></td>
+                            <td>{{ $pedido['fornecedor'] }}</td>
+                            <td>{{ $pedido['data'] }}</td>
+                            <td>{{ $pedido['item'] }}</td>
+                            <td>{{ $pedido['quantidade'] }}</td>
+                            <td><strong>R$ {{ number_format($pedido['valor'], 2, ',', '.') }}</strong></td>
+                            <td>
+                                <span class="status {{ $pedido['status'] }}">{{ $pedido['status_label'] }}</span>
+                            </td>
+                            <td style="font-size: 11px; color: var(--muted); max-width: 200px;">
+                                {{ $pedido['observacao'] ?? '—' }}
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="btn icon ghost" type="button"
+                                    data-action="open-status-modal"
+                                    data-id="{{ $pedido['id'] }}"
+                                    data-code="{{ $pedido['codigo'] }}"
+                                    data-item="{{ $pedido['item'] }}"
+                                    data-status="{{ $pedido['status'] }}"
+                                    data-observacao="{{ $pedido['observacao'] ?? '' }}"
+                                    title="Alterar Status / Ocorrência"
+                                    style="border: 1px solid var(--line); padding: 2px 6px;">
+                                    ⚙️
+                                </button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="empty-state">Nenhum serviço encontrado com os filtros atuais.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        <div class="order-mobile" id="ordersMobile">
+            @foreach ($pedidos as $pedido)
+                <article class="order-card" data-order-card
+                    data-search="{{ strtolower($pedido['codigo'] . ' ' . $pedido['codigo_item'] . ' ' . $pedido['fornecedor'] . ' ' . $pedido['item']) }}">
+                    <div class="order-top">
+                        <strong>{{ $pedido['codigo'] }}</strong>
+                        <span class="status {{ $pedido['status'] }}">{{ $pedido['status_label'] }}</span>
+                    </div>
+                    <div class="order-muted">{{ $pedido['fornecedor'] }} · {{ $pedido['item'] }}</div>
+                    @if(!empty($pedido['observacao']))
+                        <div style="font-size: 11px; color: var(--warning); margin-top: 6px;">Obs: {{ $pedido['observacao'] }}</div>
+                    @endif
+                    <div class="order-bottom">
+                        <span>{{ $pedido['data'] }}</span>
+                        <div>
+                            <strong>R$ {{ number_format($pedido['valor'], 2, ',', '.') }}</strong>
+                            <button class="btn ghost" type="button"
+                                data-action="open-status-modal"
+                                data-id="{{ $pedido['id'] }}"
+                                data-code="{{ $pedido['codigo'] }}"
+                                data-item="{{ $pedido['item'] }}"
+                                data-status="{{ $pedido['status'] }}"
+                                data-observacao="{{ $pedido['observacao'] ?? '' }}"
+                                style="margin-left: 8px; padding: 2px 8px; font-size: 11px;">
+                                Status
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            @endforeach
+        </div>
+    </section>
+
+    <section class="card section-card occurrences-section" id="occurrences">
+        <div class="section-head">
+            <div>
+                <h2>Central de Ocorrências e Divergências</h2>
+                <p>Serviços pendentes, com divergência ou observações operacionais registradas.</p>
+            </div>
+            <a href="{{ route('dashboard.ocorrencias', $obra_ativa) }}" class="pill danger-pill" style="text-decoration: none;">{{ count($ocorrencias) }} ativas (Ver Painel →)</a>
+        </div>
+
+        <div class="occ-list">
+            @forelse ($ocorrencias as $occ)
+                <article class="occ">
+                    <div class="occ-icon" aria-hidden="true">!</div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong>{{ $occ['codigo'] }}</strong>
+                            <span class="status {{ $occ['status'] }}">{{ $occ['tag'] }}</span>
+                        </div>
+                        <p style="margin-top: 4px; font-weight: 600;">{{ $occ['desc'] }}</p>
+                        @if(!empty($occ['observacao']))
+                            <div style="font-size: 12px; color: var(--ink); background: #fff; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); margin-top: 6px;">
+                                <strong>Observação:</strong> {{ $occ['observacao'] }}
+                            </div>
+                        @endif
+                    </div>
+                </article>
+            @empty
+                <div class="empty-state">Nenhuma ocorrência registrada para esta obra. Todos os itens estão entregues/normais.</div>
+            @endforelse
+        </div>
+    </section>
+@endsection
