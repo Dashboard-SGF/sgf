@@ -7,6 +7,7 @@
     <meta name="description" content="SGF — Seleção de Obras e Projetos">
     <title>SGF — Hub de Obras</title>
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 
 <body>
@@ -22,6 +23,7 @@
 
             <nav class="nav" aria-label="Navegação principal">
                 <a class="active" href="{{ route('obras.index') }}"><span class="nav-dot"></span>Hub de Obras</a>
+                <a class="active" href="{{ route('obras.index', [], false) }}"><span class="nav-dot"></span>Hub de Obras</a>
             </nav>
         </aside>
 
@@ -59,6 +61,7 @@
                     @forelse ($obras as $obra)
                         <article class="card kpi" style="cursor: pointer; transition: transform 0.15s, border-color 0.15s;"
                                  onclick="window.location.href='{{ route('dashboard', $obra->codigo_obra) }}'"
+                                 onclick="window.location.href='{{ route('dashboard', $obra->codigo_obra, false) }}'"
                                  onmouseover="this.style.borderColor='var(--brand)'; this.style.transform='translateY(-2px)';"
                                  onmouseout="this.style.borderColor='var(--line)'; this.style.transform='none';">
                             <div class="kpi-top">
@@ -103,6 +106,7 @@
             </div>
 
             <form id="importForm" class="modal-body" action="{{ route('importar.excel') }}" method="POST" enctype="multipart/form-data">
+            <form id="importForm" class="modal-body" action="{{ route('importar.excel', [], false) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="field" style="margin-bottom: 14px;">
                     <label for="codigoObraInput">Código da Obra (Opcional)</label>
@@ -125,6 +129,7 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script src="/js/dashboard.js"></script>
 </body>
 
 </html>

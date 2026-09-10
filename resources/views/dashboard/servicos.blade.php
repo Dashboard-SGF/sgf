@@ -12,6 +12,7 @@
     </section>
 
     <form method="GET" action="{{ route('dashboard.servicos', $obra_ativa) }}" class="filters" aria-label="Filtro de busca global" style="grid-template-columns: 1fr auto; align-items: end;">
+    <form method="GET" action="{{ route('dashboard.servicos', $obra_ativa, false) }}" class="filters" aria-label="Filtro de busca global" style="grid-template-columns: 1fr auto; align-items: end;">
         <div class="field search-field">
             <label for="searchInput">Busca global na tabela de serviços</label>
             <input class="control" id="searchInput" name="search" type="search"

@@ -12,6 +12,7 @@
     </section>
 
     <form method="GET" action="{{ route('dashboard', $obra_ativa) }}" class="filters" aria-label="Filtro de busca global" style="grid-template-columns: 1fr auto; align-items: end;">
+    <form method="GET" action="{{ route('dashboard', $obra_ativa, false) }}" class="filters" aria-label="Filtro de busca global" style="grid-template-columns: 1fr auto; align-items: end;">
         <div class="field search-field">
             <label for="searchInput">Busca global no banco de dados</label>
             <input class="control" id="searchInput" name="search" type="search"
@@ -105,6 +106,7 @@
                     <p>Insumos ordenados pelo impacto financeiro acumulado.</p>
                 </div>
                 <a href="{{ route('dashboard.curva-abc', $obra_ativa) }}" class="pill" style="text-decoration: none;">Ver Detalhes →</a>
+                <a href="{{ route('dashboard.curva-abc', $obra_ativa, false) }}" class="pill" style="text-decoration: none;">Ver Detalhes →</a>
             </div>
 
             <div class="abc-list">
@@ -145,6 +147,7 @@
                 <p>Lista de itens cadastrados no orçamento da obra.</p>
             </div>
             <a href="{{ route('dashboard.servicos', $obra_ativa) }}" class="pill" style="text-decoration: none;" id="visibleOrdersCount">{{ count($pedidos) }} itens (Ver Todos →)</a>
+            <a href="{{ route('dashboard.servicos', $obra_ativa, false) }}" class="pill" style="text-decoration: none;" id="visibleOrdersCount">{{ count($pedidos) }} itens (Ver Todos →)</a>
         </div>
 
         <div class="table-scroll">
@@ -241,6 +244,7 @@
                 <p>Serviços pendentes, com divergência ou observações operacionais registradas.</p>
             </div>
             <a href="{{ route('dashboard.ocorrencias', $obra_ativa) }}" class="pill danger-pill" style="text-decoration: none;">{{ count($ocorrencias) }} ativas (Ver Painel →)</a>
+            <a href="{{ route('dashboard.ocorrencias', $obra_ativa, false) }}" class="pill danger-pill" style="text-decoration: none;">{{ count($ocorrencias) }} ativas (Ver Painel →)</a>
         </div>
 
         <div class="occ-list">
