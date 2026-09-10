@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SGF — Dashboard de Suprimentos e Gestão Financeira de Obras">
+    <title>SGF — Serviços Obra 44444B</title>
+    <link rel="stylesheet" href="http://localhost/css/dashboard.css">
+</head>
+
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-mark" aria-hidden="true"></div>
+                <div>
+                    <strong>SGF</strong>
+                    <small>Gestão & Fiscalização</small>
+                </div>
+            </div>
+
+            <nav class="nav" aria-label="Navegação principal">
+                <a href="http://localhost" style="color: #4bb1a3; font-weight: 800; border: 1px solid rgba(75,177,163,0.3); margin-bottom: 8px;">
+                    <span aria-hidden="true">←</span> Voltar ao Hub
+                </a>
+                <a class="" href="http://localhost/dashboard/44444B">
+                    <span class="nav-dot"></span>Visão Financeira
+                </a>
+                <a class="" href="http://localhost/dashboard/44444B/curva-abc">
+                    <span class="nav-dot"></span>Curva ABC
+                </a>
+                <a class="active" href="http://localhost/dashboard/44444B/servicos">
+                    <span class="nav-dot"></span>Serviços & Composição
+                </a>
+                <a class="" href="http://localhost/dashboard/44444B/ocorrencias">
+                    <span class="nav-dot"></span>Ocorrências
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <a href="http://localhost" class="btn ghost" style="font-weight: 700;">
+                        <span aria-hidden="true">←</span>
+                        <span class="button-label">Voltar ao Hub</span>
+                    </a>
+                    <div class="mobile-brand">
+                        <div class="brand-mark" aria-hidden="true"></div>
+                        <strong>SGF</strong>
+                    </div>
+                </div>
+
+                <div class="top-actions">
+                    <button class="btn" type="button" data-action="print">
+                        <span aria-hidden="true">⇩</span>
+                        <span class="button-label">Exportar PDF</span>
+                    </button>
+                    <button class="btn primary" type="button" data-action="open-import">
+                        <span aria-hidden="true">＋</span>
+                        <span class="button-label">Importar Excel</span>
+                    </button>
+                </div>
+            </header>
+
+            <div class="container">
+                <div class="print-header">
+                    <div>
+                        <strong>SGF — Relatório de Gestão Financeira de Obras</strong>
+                        <span style="display: block; font-size: 12px; font-weight: 500;">Obra: 44444B</span>
+                    </div>
+                    <span style="font-size: 12px;">Emitido em: 10/09/2026 19:23</span>
+                </div>
+
+                
+                    <section class="hero">
+        <div>
+            <div class="eyebrow">Módulo 01 · Gestão de Serviços</div>
+            <h1>Serviços & Composição de Custos — Obra 44444B</h1>
+            <p>Listagem completa e gerenciamento individual de status e observações dos itens.</p>
+        </div>
+    </section>
+
+    <form method="GET" action="http://localhost/dashboard/44444B/servicos" class="filters" aria-label="Filtro de busca global" style="grid-template-columns: 1fr auto; align-items: end;">
+        <div class="field search-field">
+            <label for="searchInput">Busca global na tabela de serviços</label>
+            <input class="control" id="searchInput" name="search" type="search"
+                placeholder="Buscar por código, descrição ou tipo (SINAPI, PRÓPRIA...)" value="" autocomplete="off">
+        </div>
+
+        <button class="btn primary filter-button" type="submit">Buscar</button>
+    </form>
+
+    <section class="card table-card">
+        <div class="table-head">
+            <div>
+                <h2>Tabela de Serviços & Composições</h2>
+                <p>Altere status ou observações de qualquer item da composição.</p>
+            </div>
+            <span class="pill" id="visibleOrdersCount">7 itens cadastrados</span>
+        </div>
+
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Origem / Tipo</th>
+                        <th>Data</th>
+                        <th>Serviço / Insumo</th>
+                        <th>Quantidade</th>
+                        <th>Valor total</th>
+                        <th>Status</th>
+                        <th>Observação</th>
+                        <th style="text-align: center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTable">
+                                            <tr data-order-row
+                            data-search="01-01-01 o 1 sinapi administraÇÃo local da obra">
+                            <td><strong>01-01-01 O</strong></td>
+                            <td>SINAPI</td>
+                            <td>10/09/2026</td>
+                            <td>ADMINISTRAÇÃO LOCAL DA OBRA</td>
+                            <td>1,00 UN</td>
+                            <td><strong>R$ 25.000,00</strong></td>
+                            <td>
+                                <span class="status delivered">Entregue / Normal</span>
+                            </td>
+                            <td style="font-size: 11px; color: var(--muted); max-width: 240px;">
+                                —
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="btn icon ghost" type="button"
+                                    data-action="open-status-modal"
+                                    data-id="1"
+                                    data-code="01-01-01 O"
+                                    data-item="ADMINISTRAÇÃO LOCAL DA OBRA"
+                                    data-status="delivered"
+                                    data-observacao=""
+                                    title="Alterar Status / Ocorrência"
+                                    style="border: 1px solid var(--line); padding: 2px 6px;">
+                                    ⚙️
+                                </button>
+                            </td>
+                        </tr>
+                                            <tr data-order-row
+                            data-search="01-02-01 o 2 sinapi movimentaÇÃo de terra e escavaÇÃo">
+                            <td><strong>01-02-01 O</strong></td>
+                            <td>SINAPI</td>
+                            <td>10/09/2026</td>
+                            <td>MOVIMENTAÇÃO DE TERRA E ESCAVAÇÃO</td>
+                            <td>350,00 M3</td>
+                            <td><strong>R$ 18.500,00</strong></td>
+                            <td>
+                                <span class="status delivered">Entregue / Normal</span>
+                            </td>
+                            <td style="font-size: 11px; color: var(--muted); max-width: 240px;">
+                                —
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="btn icon ghost" type="button"
+                                    data-action="open-status-modal"
+                                    data-id="2"
+                                    data-code="01-02-01 O"
+                                    data-item="MOVIMENTAÇÃO DE TERRA E ESCAVAÇÃO"
+                                    data-status="delivered"
+                                    data-observacao=""
+                                    title="Alterar Status / Ocorrência"
+                                    style="border: 1px solid var(--line); padding: 2px 6px;">
+                                    ⚙️
+                                </button>
+                            </td>
+                        </tr>
+                                            <tr data-order-row
+                            data-search="01-03-01 o 3 prÓpria estrutura de concreto armado fck 25mpa">
+                            <td><strong>01-03-01 O</strong></td>
+                            <td>PRÓPRIA</td>
+                            <td>10/09/2026</td>
+                            <td>ESTRUTURA DE CONCRETO ARMADO FCK 25MPA</td>
+                            <td>120,00 M3</td>
+                            <td><strong>R$ 48.000,00</strong></td>
+                            <td>
+                                <span class="status delivered">Entregue / Normal</span>
+                            </td>
+                            <td style="font-size: 11px; color: var(--muted); max-width: 240px;">
+                                —
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="btn icon ghost" type="button"
+                                    data-action="open-status-modal"
+                                    data-id="3"
+                                    data-code="01-03-01 O"
+                                    data-item="ESTRUTURA DE CONCRETO ARMADO FCK 25MPA"
+                                    data-status="delivered"
+                                    data-observacao=""
+                                    title="Alterar Status / Ocorrência"
+                                    style="border: 1px solid var(--line); padding: 2px 6px;">
+                                    ⚙️
+                                </button>
+                            </td>
+                        </tr>
+                                            <tr data-order-row
+                            data-search="01-04-01 o 4 sinapi alvenaria de vedaÇÃo bloco cerÂmico 9x19x19">
+                            <td><strong>01-04-01 O</strong></td>
+                            <td>SINAPI</td>
+                            <td>10/09/2026</td>
+                            <td>ALVENARIA DE VEDAÇÃO BLOCO CERÂMICO 9X19X19</td>
+                            <td>450,00 M2</td>
+                            <td><strong>R$ 16.200,00</strong></td>
+                            <td>
+                                <span class="status delivered">Entregue / Normal</span>
+                            </td>
+                            <td style="font-size: 11px; color: var(--muted); max-width: 240px;">
+                                —
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="btn icon ghost" type="button"
+                                    data-action="open-status-modal"
+                                    data-id="4"
+                                    data-code="01-04-01 O"
+                                    data-item="ALVENARIA DE VEDAÇÃO BLOCO CERÂMICO 9X19X19"
+                                    data-status="delivered"
+                                    data-observacao=""
+                                    title="Alterar Status / Ocorrência"
+                                    style="border: 1px solid var(--line); padding: 2px 6px;">
+                                    ⚙️
+                                </button>
+                            </td>
+                        </tr>
+                                            <tr data-order-row
+                            data-search="01-05-01 o 5 prÓpria estrutura metÁlica de cobertura em aÇo astmn a36">
+                            <td><strong>01-05-01 O</strong></td>
+                            <td>PRÓPRIA</td>
+                            <td>10/09/2026</td>
+                            <td>ESTRUTURA METÁLICA DE COBERTURA EM AÇO ASTMN A36</td>
+                            <td>1.800,00 KG</td>
+                            <td><strong>R$ 14.500,00</strong></td>
+                            <td>
+                                <span class="status divergence">Com Divergência</span>
+                            </td>
+                            <td style="font-size: 11px; color: var(--muted); max-width: 240px;">
+                                Divergência de espessura nas vigas perfil I entregues no canteiro
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="btn icon ghost" type="button"
+                                    data-action="open-status-modal"
+                                    data-id="5"
+                                    data-code="01-05-01 O"
+                                    data-item="ESTRUTURA METÁLICA DE COBERTURA EM AÇO ASTMN A36"
+                                    data-status="divergence"
+                                    data-observacao="Divergência de espessura nas vigas perfil I entregues no canteiro"
+                                    title="Alterar Status / Ocorrência"
+                                    style="border: 1px solid var(--line); padding: 2px 6px;">
+                                    ⚙️
+                                </button>
+                            </td>
+                        </tr>
+                                            <tr data-order-row
+                            data-search="01-06-01 o 6 sinapi revestimento argamassado reboco interno e externo">
+                            <td><strong>01-06-01 O</strong></td>
+                            <td>SINAPI</td>
+                            <td>10/09/2026</td>
+                            <td>REVESTIMENTO ARGAMASSADO REBOCO INTERNO E EXTERNO</td>
+                            <td>600,00 M2</td>
+                            <td><strong>R$ 9.800,00</strong></td>
+                            <td>
+                                <span class="status delivered">Entregue / Normal</span>
+                            </td>
+                            <td style="font-size: 11px; color: var(--muted); max-width: 240px;">
+                                —
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="btn icon ghost" type="button"
+                                    data-action="open-status-modal"
+                                    data-id="6"
+                                    data-code="01-06-01 O"
+                                    data-item="REVESTIMENTO ARGAMASSADO REBOCO INTERNO E EXTERNO"
+                                    data-status="delivered"
+                                    data-observacao=""
+                                    title="Alterar Status / Ocorrência"
+                                    style="border: 1px solid var(--line); padding: 2px 6px;">
+                                    ⚙️
+                                </button>
+                            </td>
+                        </tr>
+                                            <tr data-order-row
+                            data-search="01-07-01 o 7 sinapi pintura lÁtex acrÍlica duas demÃos em paredes">
+                            <td><strong>01-07-01 O</strong></td>
+                            <td>SINAPI</td>
+                            <td>10/09/2026</td>
+                            <td>PINTURA LÁTEX ACRÍLICA DUAS DEMÃOS EM PAREDES</td>
+                            <td>850,00 M2</td>
+                            <td><strong>R$ 7.200,00</strong></td>
+                            <td>
+                                <span class="status pending">Pendente</span>
+                            </td>
+                            <td style="font-size: 11px; color: var(--muted); max-width: 240px;">
+                                Pendente: aguardando tempo de cura e secagem do reboco externo
+                            </td>
+                            <td style="text-align: center;">
+                                <button class="btn icon ghost" type="button"
+                                    data-action="open-status-modal"
+                                    data-id="7"
+                                    data-code="01-07-01 O"
+                                    data-item="PINTURA LÁTEX ACRÍLICA DUAS DEMÃOS EM PAREDES"
+                                    data-status="pending"
+                                    data-observacao="Pendente: aguardando tempo de cura e secagem do reboco externo"
+                                    title="Alterar Status / Ocorrência"
+                                    style="border: 1px solid var(--line); padding: 2px 6px;">
+                                    ⚙️
+                                </button>
+                            </td>
+                        </tr>
+                                    </tbody>
+            </table>
+        </div>
+
+        <div class="order-mobile" id="ordersMobile">
+                            <article class="order-card" data-order-card
+                    data-search="01-01-01 o 1 sinapi administraÇÃo local da obra">
+                    <div class="order-top">
+                        <strong>01-01-01 O</strong>
+                        <span class="status delivered">Entregue / Normal</span>
+                    </div>
+                    <div class="order-muted">SINAPI · ADMINISTRAÇÃO LOCAL DA OBRA</div>
+                                        <div class="order-bottom">
+                        <span>10/09/2026</span>
+                        <div>
+                            <strong>R$ 25.000,00</strong>
+                            <button class="btn ghost" type="button"
+                                data-action="open-status-modal"
+                                data-id="1"
+                                data-code="01-01-01 O"
+                                data-item="ADMINISTRAÇÃO LOCAL DA OBRA"
+                                data-status="delivered"
+                                data-observacao=""
+                                style="margin-left: 8px; padding: 2px 8px; font-size: 11px;">
+                                Status
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                            <article class="order-card" data-order-card
+                    data-search="01-02-01 o 2 sinapi movimentaÇÃo de terra e escavaÇÃo">
+                    <div class="order-top">
+                        <strong>01-02-01 O</strong>
+                        <span class="status delivered">Entregue / Normal</span>
+                    </div>
+                    <div class="order-muted">SINAPI · MOVIMENTAÇÃO DE TERRA E ESCAVAÇÃO</div>
+                                        <div class="order-bottom">
+                        <span>10/09/2026</span>
+                        <div>
+                            <strong>R$ 18.500,00</strong>
+                            <button class="btn ghost" type="button"
+                                data-action="open-status-modal"
+                                data-id="2"
+                                data-code="01-02-01 O"
+                                data-item="MOVIMENTAÇÃO DE TERRA E ESCAVAÇÃO"
+                                data-status="delivered"
+                                data-observacao=""
+                                style="margin-left: 8px; padding: 2px 8px; font-size: 11px;">
+                                Status
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                            <article class="order-card" data-order-card
+                    data-search="01-03-01 o 3 prÓpria estrutura de concreto armado fck 25mpa">
+                    <div class="order-top">
+                        <strong>01-03-01 O</strong>
+                        <span class="status delivered">Entregue / Normal</span>
+                    </div>
+                    <div class="order-muted">PRÓPRIA · ESTRUTURA DE CONCRETO ARMADO FCK 25MPA</div>
+                                        <div class="order-bottom">
+                        <span>10/09/2026</span>
+                        <div>
+                            <strong>R$ 48.000,00</strong>
+                            <button class="btn ghost" type="button"
+                                data-action="open-status-modal"
+                                data-id="3"
+                                data-code="01-03-01 O"
+                                data-item="ESTRUTURA DE CONCRETO ARMADO FCK 25MPA"
+                                data-status="delivered"
+                                data-observacao=""
+                                style="margin-left: 8px; padding: 2px 8px; font-size: 11px;">
+                                Status
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                            <article class="order-card" data-order-card
+                    data-search="01-04-01 o 4 sinapi alvenaria de vedaÇÃo bloco cerÂmico 9x19x19">
+                    <div class="order-top">
+                        <strong>01-04-01 O</strong>
+                        <span class="status delivered">Entregue / Normal</span>
+                    </div>
+                    <div class="order-muted">SINAPI · ALVENARIA DE VEDAÇÃO BLOCO CERÂMICO 9X19X19</div>
+                                        <div class="order-bottom">
+                        <span>10/09/2026</span>
+                        <div>
+                            <strong>R$ 16.200,00</strong>
+                            <button class="btn ghost" type="button"
+                                data-action="open-status-modal"
+                                data-id="4"
+                                data-code="01-04-01 O"
+                                data-item="ALVENARIA DE VEDAÇÃO BLOCO CERÂMICO 9X19X19"
+                                data-status="delivered"
+                                data-observacao=""
+                                style="margin-left: 8px; padding: 2px 8px; font-size: 11px;">
+                                Status
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                            <article class="order-card" data-order-card
+                    data-search="01-05-01 o 5 prÓpria estrutura metÁlica de cobertura em aÇo astmn a36">
+                    <div class="order-top">
+                        <strong>01-05-01 O</strong>
+                        <span class="status divergence">Com Divergência</span>
+                    </div>
+                    <div class="order-muted">PRÓPRIA · ESTRUTURA METÁLICA DE COBERTURA EM AÇO ASTMN A36</div>
+                                            <div style="font-size: 11px; color: var(--warning); margin-top: 6px;">Obs: Divergência de espessura nas vigas perfil I entregues no canteiro</div>
+                                        <div class="order-bottom">
+                        <span>10/09/2026</span>
+                        <div>
+                            <strong>R$ 14.500,00</strong>
+                            <button class="btn ghost" type="button"
+                                data-action="open-status-modal"
+                                data-id="5"
+                                data-code="01-05-01 O"
+                                data-item="ESTRUTURA METÁLICA DE COBERTURA EM AÇO ASTMN A36"
+                                data-status="divergence"
+                                data-observacao="Divergência de espessura nas vigas perfil I entregues no canteiro"
+                                style="margin-left: 8px; padding: 2px 8px; font-size: 11px;">
+                                Status
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                            <article class="order-card" data-order-card
+                    data-search="01-06-01 o 6 sinapi revestimento argamassado reboco interno e externo">
+                    <div class="order-top">
+                        <strong>01-06-01 O</strong>
+                        <span class="status delivered">Entregue / Normal</span>
+                    </div>
+                    <div class="order-muted">SINAPI · REVESTIMENTO ARGAMASSADO REBOCO INTERNO E EXTERNO</div>
+                                        <div class="order-bottom">
+                        <span>10/09/2026</span>
+                        <div>
+                            <strong>R$ 9.800,00</strong>
+                            <button class="btn ghost" type="button"
+                                data-action="open-status-modal"
+                                data-id="6"
+                                data-code="01-06-01 O"
+                                data-item="REVESTIMENTO ARGAMASSADO REBOCO INTERNO E EXTERNO"
+                                data-status="delivered"
+                                data-observacao=""
+                                style="margin-left: 8px; padding: 2px 8px; font-size: 11px;">
+                                Status
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                            <article class="order-card" data-order-card
+                    data-search="01-07-01 o 7 sinapi pintura lÁtex acrÍlica duas demÃos em paredes">
+                    <div class="order-top">
+                        <strong>01-07-01 O</strong>
+                        <span class="status pending">Pendente</span>
+                    </div>
+                    <div class="order-muted">SINAPI · PINTURA LÁTEX ACRÍLICA DUAS DEMÃOS EM PAREDES</div>
+                                            <div style="font-size: 11px; color: var(--warning); margin-top: 6px;">Obs: Pendente: aguardando tempo de cura e secagem do reboco externo</div>
+                                        <div class="order-bottom">
+                        <span>10/09/2026</span>
+                        <div>
+                            <strong>R$ 7.200,00</strong>
+                            <button class="btn ghost" type="button"
+                                data-action="open-status-modal"
+                                data-id="7"
+                                data-code="01-07-01 O"
+                                data-item="PINTURA LÁTEX ACRÍLICA DUAS DEMÃOS EM PAREDES"
+                                data-status="pending"
+                                data-observacao="Pendente: aguardando tempo de cura e secagem do reboco externo"
+                                style="margin-left: 8px; padding: 2px 8px; font-size: 11px;">
+                                Status
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                    </div>
+    </section>
+            </div>
+        </main>
+
+        <nav class="mobile-nav" aria-label="Navegação mobile">
+            <a href="http://localhost/dashboard/44444B" class=""><span>⌂</span>Resumo</a>
+            <a href="http://localhost/dashboard/44444B/curva-abc" class=""><span>▥</span>ABC</a>
+            <a href="http://localhost/dashboard/44444B/servicos" class="active"><span>≡</span>Serviços</a>
+            <a href="http://localhost/dashboard/44444B/ocorrencias" class=""><span>!</span>Ocorrências</a>
+        </nav>
+    </div>
+
+    
+    <div class="modal" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importTitle">
+        <div class="modal-card">
+            <div class="modal-head">
+                <div>
+                    <h2 id="importTitle">Importar planilha de custos</h2>
+                    <p>Substituição limpa: apaga a carga anterior da mesma obra antes de salvar.</p>
+                </div>
+                <button class="btn icon ghost" type="button" data-action="close-import" aria-label="Fechar">×</button>
+            </div>
+
+            <form id="importForm" class="modal-body" action="http://localhost/importar" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_token" value="rDtYTuHEklGSUf3eZ1paCanZusqF2s5iPkUSK450" autocomplete="off">                <div class="field" style="margin-bottom: 14px;">
+                    <label for="codigoObraImport">Código da Obra</label>
+                    <input class="control" id="codigoObraImport" name="codigo_obra" type="text" value="44444B" placeholder="Ex: 44444B">
+                </div>
+
+                <div class="dropzone">
+                    <strong>Selecione a planilha legada</strong>
+                    <p>Arquivos .xlsx ou .xls.</p>
+                    <input id="excelFile" name="arquivo" type="file" accept=".xlsx,.xls" required>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn" type="button" data-action="close-import">Cancelar</button>
+                    <button class="btn primary" id="submitImport" type="submit">Validar e processar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal" id="budgetModal" role="dialog" aria-modal="true" aria-labelledby="budgetTitle">
+        <div class="modal-card">
+            <div class="modal-head">
+                <div>
+                    <h2 id="budgetTitle">Definir Orçamento Aprovado</h2>
+                    <p>Altere o teto orçamentário da obra <strong>44444B</strong>.</p>
+                </div>
+                <button class="btn icon ghost" type="button" data-action="close-budget-modal" aria-label="Fechar">×</button>
+            </div>
+
+            <form class="modal-body" action="http://localhost/dashboard/44444B/orcamento" method="POST">
+                <input type="hidden" name="_token" value="rDtYTuHEklGSUf3eZ1paCanZusqF2s5iPkUSK450" autocomplete="off">                <div class="field" style="margin-bottom: 14px;">
+                    <label for="orcamentoAprovadoInput">Valor do Orçamento Aprovado (R$)</label>
+                    <input class="control" id="orcamentoAprovadoInput" name="orcamento_aprovado" type="number" step="0.01" value="150000" required>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn" type="button" data-action="close-budget-modal">Cancelar</button>
+                    <button class="btn primary" type="submit">Salvar Orçamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="modal" id="statusModal" role="dialog" aria-modal="true" aria-labelledby="statusTitle">
+        <div class="modal-card">
+            <div class="modal-head">
+                <div>
+                    <h2 id="statusTitle">Gerenciar Status e Ocorrência</h2>
+                    <p id="statusItemName">Item do serviço</p>
+                </div>
+                <button class="btn icon ghost" type="button" data-action="close-status-modal" aria-label="Fechar">×</button>
+            </div>
+
+            <form id="statusForm" class="modal-body" action="" method="POST">
+                <input type="hidden" name="_token" value="rDtYTuHEklGSUf3eZ1paCanZusqF2s5iPkUSK450" autocomplete="off">                <input type="hidden" name="_method" value="PATCH">                <div class="field" style="margin-bottom: 14px;">
+                    <label for="serviceStatusSelect">Status do Item</label>
+                    <select class="control" id="serviceStatusSelect" name="status" required>
+                        <option value="delivered">Entregue / Normal</option>
+                        <option value="pending">Pendente</option>
+                        <option value="divergence">Com Divergência</option>
+                        <option value="approved">Aprovado</option>
+                    </select>
+                </div>
+
+                <div class="field" style="margin-bottom: 14px;">
+                    <label for="serviceObservacaoInput">Observação / Ocorrência</label>
+                    <textarea class="control" id="serviceObservacaoInput" name="observacao" rows="3" placeholder="Descreva eventuais atrasos, avarias ou inconsistências..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn" type="button" data-action="close-status-modal">Cancelar</button>
+                    <button class="btn primary" type="submit">Salvar Alteração</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="http://localhost/js/dashboard.js"></script>
+</body>
+
+</html>
+
