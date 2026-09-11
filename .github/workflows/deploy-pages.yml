@@ -48,19 +48,23 @@ jobs:
           APP_ENV: production
         run: php artisan export
 
-      - name: 7. Pós-Processamento Físico de URLs (Injeção de Subpasta do Pages)
+      - name: 7. Pós-Processamento Físico (Cópia de Assets e Injeção de URLs do Pages)
         run: |
-          # 1. Troca referências diretas de localhost por /sgf/
+          # 1. Garante a cópia física da pasta public/images para dist/images
+          mkdir -p dist/images
+          cp -r public/images/* dist/images/ 2>/dev/null || true
+
+          # 2. Substitui referências diretas de localhost por /sgf/
           find dist -type f -name "*.html" -exec sed -i 's|http://localhost/|/sgf/|g' {} +
           find dist -type f -name "*.html" -exec sed -i 's|http://localhost||g' {} +
 
-          # 2. Corrigi links absolutos raiz (/dashboard, href="/css", etc.) para a subpasta do Pages (/sgf/...)
+          # 3. Corrige links absolutos e caminhos de assets para a subpasta do Pages (/sgf/...)
           find dist -type f -name "*.html" -exec sed -i 's|href="/|href="/sgf/|g' {} +
           find dist -type f -name "*.html" -exec sed -i 's|src="/|src="/sgf/|g' {} +
           find dist -type f -name "*.html" -exec sed -i 's|action="/|action="/sgf/|g' {} +
           find dist -type f -name "*.html" -exec sed -i 's|window.location.href="/|window.location.href="/sgf/|g' {} +
 
-          # 3. Evita duplicidade caso algum sed tenha gerado //sgf/ ou /sgf/sgf/
+          # 4. Evita duplicidades acidentais como /sgf/sgf/
           find dist -type f -name "*.html" -exec sed -i 's|/sgf/sgf/|/sgf/|g' {} +
 
       - name: 8. Upload do Artefato para GitHub Pages
