@@ -1,4 +1,4 @@
-name: Deploy Plano B (GitHub Pages)
+name: Deploy SGF to GitHub Pages
 
 on:
   push:
@@ -6,59 +6,59 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do Código
+      - name: 1. Checkout do Código
         uses: actions/checkout@v4
 
-      - name: Configurar PHP 8.2
+      - name: 2. Setup do Ambiente PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, dom, fileinfo, gd, zip, openssl, sqlite3, pdo_sqlite
+          extensions: mbstring, sqlite3, pdo_sqlite, bcmath, gd
 
-      - name: Instalar Dependências do Composer
+      - name: 3. Instalar Dependências do Composer
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Preparar Arquivo de Ambiente (.env) e Banco SQLite
+      - name: 4. Configurar Ambiente Laravel & Banco SQLite Zerado
         run: |
           cp .env.example .env
-          php artisan key:generate
           touch database/database.sqlite
+          php artisan key:generate
 
-      - name: Executar Migrations e Seeder de Produção
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
-        run: |
-          php artisan migrate --force
-          php artisan db:seed --force
+      - name: 5. Rodar Migrations & Popular Banco via Seeder
+        run: php artisan migrate:fresh --seed --force
 
-      - name: Executar Exportação Estática (Spatie)
+      - name: 6. Executar Exportação Estática (Spatie)
         env:
           APP_ENV: production
-          APP_DEBUG: true
-          DB_CONNECTION: sqlite
-          DB_DATABASE: database/database.sqlite
-          SESSION_DRIVER: array
-          CACHE_STORE: array
-          QUEUE_CONNECTION: sync
+          APP_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
         run: php artisan export
 
-      - name: Mostrar log do Laravel em caso de erro
-        if: failure()
+      - name: 7. Pós-Processamento Físico de URLs (Limpeza de Localhost)
         run: |
-          if [ -f storage/logs/laravel.log ]; then
-            cat storage/logs/laravel.log
-          fi
+          find dist -type f -name "*.html" -exec sed -i 's|http://localhost/|/|g' {} +
+          find dist -type f -name "*.html" -exec sed -i 's|http://localhost||g' {} +
 
-      - name: Publicar Artefatos no GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: 8. Upload do Artefato para GitHub Pages
+        uses: actions/upload-pages-artifact@v3
         with:
-          folder: dist
-          branch: gh-pages
+          path: 'dist'
+
+      - name: 9. Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
