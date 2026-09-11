@@ -105,7 +105,6 @@
                     <h2>Curva ABC de custos</h2>
                     <p>Insumos ordenados pelo impacto financeiro acumulado.</p>
                 </div>
-                <a href="{{ route('dashboard.curva-abc', $obra_ativa) }}" class="pill" style="text-decoration: none;">Ver Detalhes →</a>
                 <a href="{{ route('dashboard.curva-abc', $obra_ativa, false) }}" class="pill" style="text-decoration: none;">Ver Detalhes →</a>
             </div>
 
@@ -146,7 +145,6 @@
                 <h2>Serviços e Composições de Custos</h2>
                 <p>Lista de itens cadastrados no orçamento da obra.</p>
             </div>
-            <a href="{{ route('dashboard.servicos', $obra_ativa) }}" class="pill" style="text-decoration: none;" id="visibleOrdersCount">{{ count($pedidos) }} itens (Ver Todos →)</a>
             <a href="{{ route('dashboard.servicos', $obra_ativa, false) }}" class="pill" style="text-decoration: none;" id="visibleOrdersCount">{{ count($pedidos) }} itens (Ver Todos →)</a>
         </div>
 
@@ -243,7 +241,6 @@
                 <h2>Central de Ocorrências e Divergências</h2>
                 <p>Serviços pendentes, com divergência ou observações operacionais registradas.</p>
             </div>
-            <a href="{{ route('dashboard.ocorrencias', $obra_ativa) }}" class="pill danger-pill" style="text-decoration: none;">{{ count($ocorrencias) }} ativas (Ver Painel →)</a>
             <a href="{{ route('dashboard.ocorrencias', $obra_ativa, false) }}" class="pill danger-pill" style="text-decoration: none;">{{ count($ocorrencias) }} ativas (Ver Painel →)</a>
         </div>
 
