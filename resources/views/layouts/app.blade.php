@@ -22,23 +22,22 @@
             </div>
 
             <nav class="nav" aria-label="Navegação principal">
-                <a href="{{ route('obras.index') }}" style="color: #4bb1a3; font-weight: 800; border: 1px solid rgba(75,177,163,0.3); margin-bottom: 8px;">
                 <a href="{{ route('obras.index', [], false) }}" style="color: #4bb1a3; font-weight: 800; border: 1px solid rgba(75,177,163,0.3); margin-bottom: 8px;">
                     <span aria-hidden="true">←</span> Voltar ao Hub
                 </a>
-                <a class="{{ ($active_tab ?? '') === 'overview' ? 'active' : '' }}" href="{{ route('dashboard', $obra_ativa ?? '44444B') }}">
+
                 <a class="{{ ($active_tab ?? '') === 'overview' ? 'active' : '' }}" href="{{ route('dashboard', $obra_ativa ?? '44444B', false) }}">
                     <span class="nav-dot"></span>Visão Financeira
                 </a>
-                <a class="{{ ($active_tab ?? '') === 'curva-abc' ? 'active' : '' }}" href="{{ route('dashboard.curva-abc', $obra_ativa ?? '44444B') }}">
+
                 <a class="{{ ($active_tab ?? '') === 'curva-abc' ? 'active' : '' }}" href="{{ route('dashboard.curva-abc', $obra_ativa ?? '44444B', false) }}">
                     <span class="nav-dot"></span>Curva ABC
                 </a>
-                <a class="{{ ($active_tab ?? '') === 'servicos' ? 'active' : '' }}" href="{{ route('dashboard.servicos', $obra_ativa ?? '44444B') }}">
+
                 <a class="{{ ($active_tab ?? '') === 'servicos' ? 'active' : '' }}" href="{{ route('dashboard.servicos', $obra_ativa ?? '44444B', false) }}">
                     <span class="nav-dot"></span>Serviços & Composição
                 </a>
-                <a class="{{ ($active_tab ?? '') === 'ocorrencias' ? 'active' : '' }}" href="{{ route('dashboard.ocorrencias', $obra_ativa ?? '44444B') }}">
+
                 <a class="{{ ($active_tab ?? '') === 'ocorrencias' ? 'active' : '' }}" href="{{ route('dashboard.ocorrencias', $obra_ativa ?? '44444B', false) }}">
                     <span class="nav-dot"></span>Ocorrências
                 </a>
@@ -48,7 +47,7 @@
         <main class="main">
             <header class="topbar">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <a href="{{ route('obras.index') }}" class="btn ghost" style="font-weight: 700;">
+                    
                     <a href="{{ route('obras.index', [], false) }}" class="btn ghost" style="font-weight: 700;">
                         <span aria-hidden="true">←</span>
                         <span class="button-label">Voltar ao Hub</span>
