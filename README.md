@@ -1,4 +1,3 @@
-```markdown
 # 🏗️ SGF — Sistema de Gestão e Fiscalização de Obras
 
 [![Deploy SGF to GitHub Pages](https://github.com/Dashboard-SGF/sgf/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/Dashboard-SGF/sgf/actions/workflows/deploy-pages.yml)
