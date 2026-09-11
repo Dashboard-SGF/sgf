@@ -18,7 +18,7 @@
                 <div>
                     <strong>SGF</strong>
                     <small>Gestão & Fiscalização</small>
-                </div>php artisan serve
+                </div>
             </div>
 
             <nav class="nav" aria-label="Navegação principal">
