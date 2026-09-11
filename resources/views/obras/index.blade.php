@@ -14,7 +14,7 @@
     <div class="app">
         <aside class="sidebar">
             <div class="brand">
-                <div class="brand-mark" aria-hidden="true"></div>
+                <img src="{{ asset('images/logo_com_cor_de_fundo.png') }}" alt="SGF Logo" class="brand-logo" style="width:44px;height:44px;object-fit:contain;">
                 <div>
                     <strong>SGF</strong>
                     <small>Gestão & Fiscalização</small>
@@ -29,7 +29,7 @@
         <main class="main">
             <header class="topbar">
                 <div class="mobile-brand">
-                    <div class="brand-mark" aria-hidden="true"></div>
+                    <img src="{{ asset('images/logo_sem_cor_de_fundo.png') }}" alt="SGF Logo" class="brand-logo" style="width:40px;height:40px;object-fit:contain;border-radius:10px;">
                     <strong>SGF</strong>
                 </div>
 
