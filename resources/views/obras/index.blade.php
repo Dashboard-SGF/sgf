@@ -18,12 +18,11 @@
                 <div>
                     <strong>SGF</strong>
                     <small>Gestão & Fiscalização</small>
-                </div>
+                </div>php artisan serve
             </div>
 
             <nav class="nav" aria-label="Navegação principal">
                 <a class="active" href="{{ route('obras.index') }}"><span class="nav-dot"></span>Hub de Obras</a>
-                <a class="active" href="{{ route('obras.index', [], false) }}"><span class="nav-dot"></span>Hub de Obras</a>
             </nav>
         </aside>
 
