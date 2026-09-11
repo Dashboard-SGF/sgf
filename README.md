@@ -15,7 +15,7 @@ https://dashboard-sgf.github.io/sgf/
 
 ## 📌 Contexto Acadêmico
 
-Este projeto foi desenvolvido como requisito prático da disciplina de **Processos de Software**, ministrada pelo **Prof. Me. Eng. Rafael Bispo**, no curso de **Análise e Desenvolvimento de Sistemas** da **Universidade Católica do Salvador (UCSal)**.
+Este projeto foi desenvolvido como para a disciplina de **Processos de Software**, ministrada pelo **Prof. Me. Eng. Rafael Bispo**, no curso de **Análise e Desenvolvimento de Sistemas** da **Universidade Católica do Salvador (UCSal)**.
 
 O projeto teve como objetivo desenvolver uma solução baseada em um cenário real de gestão e fiscalização de obras, utilizando um dataset orçamentário fornecido no contexto da disciplina.
 
