@@ -47,7 +47,7 @@
         <main class="main">
             <header class="topbar">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    
+
                     <a href="{{ route('obras.index', [], false) }}" class="btn ghost" style="font-weight: 700;">
                         <span aria-hidden="true">←</span>
                         <span class="button-label">Voltar ao Hub</span>
@@ -90,10 +90,6 @@
         </main>
 
         <nav class="mobile-nav" aria-label="Navegação mobile">
-            <a href="{{ route('dashboard', $obra_ativa ?? '44444B') }}" class="{{ ($active_tab ?? '') === 'overview' ? 'active' : '' }}"><span>⌂</span>Resumo</a>
-            <a href="{{ route('dashboard.curva-abc', $obra_ativa ?? '44444B') }}" class="{{ ($active_tab ?? '') === 'curva-abc' ? 'active' : '' }}"><span>▥</span>ABC</a>
-            <a href="{{ route('dashboard.servicos', $obra_ativa ?? '44444B') }}" class="{{ ($active_tab ?? '') === 'servicos' ? 'active' : '' }}"><span>≡</span>Serviços</a>
-            <a href="{{ route('dashboard.ocorrencias', $obra_ativa ?? '44444B') }}" class="{{ ($active_tab ?? '') === 'ocorrencias' ? 'active' : '' }}"><span>!</span>Ocorrências</a>
             <a href="{{ route('dashboard', $obra_ativa ?? '44444B', false) }}" class="{{ ($active_tab ?? '') === 'overview' ? 'active' : '' }}"><span>⌂</span>Resumo</a>
             <a href="{{ route('dashboard.curva-abc', $obra_ativa ?? '44444B', false) }}" class="{{ ($active_tab ?? '') === 'curva-abc' ? 'active' : '' }}"><span>▥</span>ABC</a>
             <a href="{{ route('dashboard.servicos', $obra_ativa ?? '44444B', false) }}" class="{{ ($active_tab ?? '') === 'servicos' ? 'active' : '' }}"><span>≡</span>Serviços</a>
