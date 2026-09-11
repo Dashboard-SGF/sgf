@@ -46,12 +46,11 @@ jobs:
       - name: 6. Executar Exportação Estática (Spatie)
         env:
           APP_ENV: production
-          APP_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
         run: php artisan export
 
-      - name: 7. Pós-Processamento Físico de URLs (Limpeza de Localhost)
+      - name: 7. Pós-Processamento Físico de URLs (Limpeza e Subpasta do Pages)
         run: |
-          find dist -type f -name "*.html" -exec sed -i 's|http://localhost/|/|g' {} +
+          find dist -type f -name "*.html" -exec sed -i 's|http://localhost/|/sgf/|g' {} +
           find dist -type f -name "*.html" -exec sed -i 's|http://localhost||g' {} +
 
       - name: 8. Upload do Artefato para GitHub Pages
